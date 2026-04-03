@@ -11,7 +11,6 @@
         .header { text-align: center; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px; }
         .header h2 { margin: 0; font-size: 22px; font-weight: 800; }
         .cuerpo { font-size: 14px; line-height: 1.5; text-align: justify; }
-        .seccion-gris { background: #f8fafc; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; margin: 15px 0; font-size: 12px; }
         canvas { border: 1px dashed #cbd5e1; border-radius: 8px; background: #fff; touch-action: none; width: 100%; height: 180px; display: block; margin: 15px 0; }
         .firma-linea { border-top: 1.5px solid #000; width: 80%; margin: 10px auto; padding-top: 5px; text-align: center; font-weight: bold; font-size: 13px; text-transform: uppercase; }
         .btn-group { width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 10px; padding-bottom: 30px; }
@@ -29,33 +28,24 @@
         <small>Documento Privado</small>
     </div>
     
-    <div class="cuerpo" id="ticket-content">
-        <b>Yo</b> <span id="nom-display"></span> con C.I. / DNI: <b id="ci-display"></b>, con domicilio en <b id="dir-display"></b>, 
-        declaro haber recibido en condición de Préstamo por parte de Eliezer Roca, la suma de <b id="cap-display"></b><br>
+    <div class="cuerpo">
+        <b>Yo</b> <span id="nom-display"></span> con C.I.: <b id="ci-display"></b>, con domicilio en <b id="dir-display"></b>, 
+        declaro haber recibido en préstamo la suma de <b id="cap-display"></b><br>
         <b>(SON:</b> <span id="literal-display"></span><b>)</b><br>
-        Con un <b>Interés: (<span id="int-display"></span>%),</b> <span id="plazo-display"></span> (Cada <span id="mod-display"></span> <span id="dias-display"></span>).<br>
-        Por lo que me comprometo a pagar bajo los términos y condiciones, en el plazo establecido.<br><br>
+        Con un <b>Interés: (<span id="int-display"></span>%),</b> <span id="plazo-etiqueta"></span>.<br><br>
         
         <b>Cronograma:</b> <span id="n-display"></span> Cuotas de <span id="cf-display"></span><br>
-        <b>Fecha de Desembolso:</b> <span id="fdes-display"></span><br>
-        <b>Fecha 1ra. Cuota:</b> <span id="f1-display"></span><br><br>
+        <b>Fecha Desembolso:</b> <span id="fdes-display"></span><br>
+        <b>Fecha 1ra Cuota:</b> <span id="f1-display"></span><br><br>
         
-        <b>Método:</b> <span id="metodo-display"></span><br>
-        <b>Comp. N°:</b> <span id="ref-display"></span>
-
-        <div class="seccion-gris">
-            <b>Términos y Condiciones:</b><br>
-            <p>1. PRIMERA: Cláusula de Mora. En caso de incumplimiento, se aplicará un interés por mora diaria de <span id="mora-display"></span>.</p>
-            <p>2. SEGUNDA: Los intereses no pagados se capitalizarán.</p>
-        </div>
+        <b>Método:</b> <span id="metodo-display"></span> <span id="ref-display"></span>
     </div>
 
     <canvas id="canvas-firma"></canvas>
 
     <div class="firma-linea">
-        <small style="display:block; font-weight:normal; text-transform:none;">Firma del Cliente</small>
         <span id="footer-nom"></span><br>
-        <small id="footer-ci" style="text-transform:none;"></small>
+        <small id="footer-ci"></small>
     </div>
 </div>
 
@@ -70,62 +60,32 @@
     const ctx = canvas.getContext('2d');
     let dibujando = false;
 
-    // CAPTURA DE PARÁMETROS DE LA URL
+    // CAPTURA LOS DATOS DE LA URL
     const urlParams = new URLSearchParams(window.location.search);
     
-    // Asignación con valores por defecto para evitar campos vacíos
-    const nom = urlParams.get('nom') || "SIN NOMBRE";
-    const ci = urlParams.get('ci') || "";
-    const dir = urlParams.get('dir') || "NO ESPECIFICADA";
-    const cap = urlParams.get('cap') || "0.00";
-    const mon = urlParams.get('mon') || "Bs.";
-    const intP = urlParams.get('int') || "0";
-    const n = urlParams.get('n') || "0";
-    const mod = parseInt(urlParams.get('mod')) || 30;
-    const fD = urlParams.get('fD') || "";
-    const f1 = urlParams.get('f1') || "";
-    const cf = urlParams.get('cf') || "0.00";
-    const lit = urlParams.get('lit') || "";
-    const metodo = urlParams.get('met') || "";
-    const ref = urlParams.get('ref') || "";
-    const moraV = urlParams.get('mora') || "0.00";
+    // Inyectar datos en el HTML
+    document.getElementById('nom-display').innerText = urlParams.get('nom') || "";
+    document.getElementById('ci-display').innerText = urlParams.get('ci') || "";
+    document.getElementById('dir-display').innerText = urlParams.get('dir') || "NO ESPECIFICADA";
+    document.getElementById('cap-display').innerText = (urlParams.get('mon') || "Bs.") + " " + (urlParams.get('cap') || "0.00");
+    document.getElementById('literal-display').innerText = urlParams.get('lit') || "";
+    document.getElementById('int-display').innerText = urlParams.get('int') || "0";
+    document.getElementById('n-display').innerText = urlParams.get('n') || "0";
+    document.getElementById('cf-display').innerText = (urlParams.get('mon') || "Bs.") + " " + (urlParams.get('cf') || "0.00");
+    document.getElementById('fdes-display').innerText = urlParams.get('fD') || "";
+    document.getElementById('f1-display').innerText = urlParams.get('f1') || "";
+    document.getElementById('metodo-display').innerText = urlParams.get('met') || "";
+    document.getElementById('ref-display').innerText = urlParams.get('ref') ? `(${urlParams.get('ref')})` : "";
+    document.getElementById('footer-nom').innerText = urlParams.get('nom') || "";
+    document.getElementById('footer-ci').innerText = "C.I.: " + (urlParams.get('ci') || "");
 
-    // Lógica de etiquetas de plazo (Basada en tu función previsualizarPlan)
-    const nombresPlazo = { 30: "Mensual", 15: "Quincenal", 7: "Semanal", 1: "Diario" };
-    const etiquetaPlazo = nombresPlazo[mod] || "Personalizado";
-    const textoDias = (mod === 1) ? "Día" : "Días";
-
-    // INYECCIÓN EN EL HTML
-    document.getElementById('nom-display').innerText = nom;
-    document.getElementById('ci-display').innerText = ci;
-    document.getElementById('dir-display').innerText = dir;
-    document.getElementById('cap-display').innerText = `${mon} ${cap}`;
-    document.getElementById('literal-display').innerText = lit;
-    document.getElementById('int-display').innerText = intP;
-    document.getElementById('plazo-display').innerText = etiquetaPlazo;
-    document.getElementById('mod-display').innerText = mod;
-    document.getElementById('dias-display').innerText = textoDias;
-    document.getElementById('n-display').innerText = n;
-    document.getElementById('cf-display').innerText = `${mon} ${cf}`;
-    document.getElementById('fdes-display').innerText = fD;
-    document.getElementById('f1-display').innerText = f1;
-    document.getElementById('metodo-display').innerText = metodo;
-    document.getElementById('ref-display').innerText = ref ? `(${ref})` : "";
-    document.getElementById('mora-display').innerText = `${mon} ${moraV}`;
-    document.getElementById('footer-nom').innerText = nom;
-    document.getElementById('footer-ci').innerText = `C.I.: ${ci}`;
-
-    // LÓGICA DEL CANVAS (FIRMA)
-    function ajustarResolucion() {
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width * 2;
-        canvas.height = rect.height * 2;
-        ctx.scale(2, 2);
-        ctx.strokeStyle = "#1e3a8a"; 
-        ctx.lineWidth = 2.5;
-        ctx.lineCap = "round";
+    // Lógica del Canvas (Firma)
+    function ajustarCanvas() {
+        const r = canvas.getBoundingClientRect();
+        canvas.width = r.width * 2; canvas.height = r.height * 2;
+        ctx.scale(2, 2); ctx.strokeStyle = "#1e3a8a"; ctx.lineWidth = 2;
     }
-    window.onload = ajustarResolucion;
+    window.onload = ajustarCanvas;
 
     function obtenerPos(e) {
         const r = canvas.getBoundingClientRect();
@@ -133,32 +93,29 @@
         const clientY = e.touches ? e.touches[0].clientY : e.clientY;
         return { x: clientX - r.left, y: clientY - r.top };
     }
-
     function iniciar(e) { dibujando = true; ctx.beginPath(); const p = obtenerPos(e); ctx.moveTo(p.x, p.y); }
     function mover(e) { if (!dibujando) return; e.preventDefault(); const p = obtenerPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); }
-    function detener() { dibujando = false; }
-
+    
     canvas.addEventListener('mousedown', iniciar);
     canvas.addEventListener('mousemove', mover);
-    window.addEventListener('mouseup', detener);
-    canvas.addEventListener('touchstart', iniciar, {passive: false});
-    canvas.addEventListener('touchmove', mover, {passive: false});
-    canvas.addEventListener('touchend', detener);
+    window.addEventListener('mouseup', () => dibujando = false);
+    canvas.addEventListener('touchstart', iniciar);
+    canvas.addEventListener('touchmove', mover);
 
     function limpiar() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
     function descargarPNG() {
-        html2canvas(document.getElementById('hoja-contrato'), { scale: 3 }).then(canvasRes => {
+        html2canvas(document.getElementById('hoja-contrato'), { scale: 3 }).then(c => {
             const link = document.createElement('a');
-            link.download = `Contrato_${nom.replace(/ /g, '_')}.png`;
-            link.href = canvasRes.toDataURL("image/png");
+            link.download = "Contrato_Firmado.png";
+            link.href = c.toDataURL();
             link.click();
         });
     }
 
     function enviar() {
-        const mensaje = `*CONTRATO FIRMADO - INVERSIONES ROCA*%0A*Cliente:* ${nom}%0A*C.I.:* ${ci}%0A%0A_Adjunte la imagen descargada y pegue su firma aquí._`;
-        window.location.href = `https://wa.me/59175475544?text=${mensaje}`;
+        const msg = encodeURIComponent("*CONTRATO FIRMADO*\nAdjunto el documento del cliente.");
+        window.location.href = `https://wa.me/59175475544?text=${msg}`;
     }
 </script>
 </body>
