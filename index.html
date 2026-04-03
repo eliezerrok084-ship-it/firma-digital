@@ -4,59 +4,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Firma Digital - Inversiones ROCA</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        body { font-family: 'Inter', sans-serif; background: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; padding: 10px; box-sizing: border-box; }
-        .card { background: #ffffff; color: #1e293b; width: 100%; max-width: 420px; border-radius: 16px; padding: 25px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); text-align: center; }
+        body { font-family: 'Inter', sans-serif; background: #0f172a; color: #f8fafc; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 15px; box-sizing: border-box; }
+        
+        /* Contenedor que se convertirá en PNG */
+        .card { background: #ffffff; color: #1e293b; width: 100%; max-width: 420px; border-radius: 16px; padding: 25px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); text-align: center; margin-bottom: 20px; }
+        
         h2 { margin: 0 0 5px 0; color: #1e3a8a; font-size: 22px; letter-spacing: -0.5px; }
-        .cliente-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 10px; margin-bottom: 20px; font-weight: 600; color: #334155; font-size: 14px; }
-        canvas { border: 2px dashed #cbd5e1; border-radius: 12px; background: #fff; touch-action: none; width: 100%; height: 280px; display: block; cursor: crosshair; }
-        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-        button { border: none; padding: 16px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 14px; transition: all 0.2s; }
+        .cliente-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 10px; margin-bottom: 15px; font-weight: 600; color: #334155; font-size: 14px; text-align: justify; line-height: 1.4; }
+        
+        canvas { border: 2px dashed #cbd5e1; border-radius: 12px; background: #fff; touch-action: none; width: 100%; height: 200px; display: block; cursor: crosshair; margin-top: 10px; }
+        
+        .btn-group { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 420px; }
+        button { border: none; padding: 16px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 14px; transition: all 0.2s; width: 100%; }
+        
         .btn-clear { background: #f1f5f9; color: #64748b; }
+        .btn-download { background: #10b981; color: white; }
         .btn-send { background: #1e3a8a; color: white; box-shadow: 0 4px 6px -1px rgba(30, 58, 138, 0.3); }
-        .btn-send:active { transform: scale(0.96); }
-        .instruccion { font-size: 12px; color: #94a3b8; margin-bottom: 10px; font-style: italic; }
+        
+        button:active { transform: scale(0.98); }
+        .instruccion { font-size: 12px; color: #94a3b8; margin-top: 10px; font-style: italic; }
+        b { color: #1e3a8a; }
     </style>
 </head>
 <body>
 
-<div class="card">
+<div class="card" id="hoja-contrato">
     <h2>INVERSIONES ROCA</h2>
-    <div class="cliente-box" id="info-cliente">Cargando datos del cliente...</div>
+    <small style="color: #64748b; margin-bottom: 15px; display: block;">Documento Privado de Crédito</small>
     
-    <p class="instruccion">Firme aquí con su dedo (Trazo Azul Marino)</p>
+    <div class="cliente-box" id="info-cliente">
+        Yo, <b id="nom-display"></b> con C.I.: <b id="ci-display"></b>, declaro haber recibido en préstamo la suma de <b id="monto-display"></b>. Me comprometo a pagar bajo los términos acordados con un interés del 5%.
+    </div>
+    
     <canvas id="canvas-firma"></canvas>
-
-    <div class="btn-group">
-        <button class="btn-clear" onclick="limpiar()">REPETIR</button>
-        <button class="btn-send" onclick="enviar()">ENVIAR FIRMA</button>
+    <div style="margin-top: 5px; border-top: 1.5px solid #1e293b; width: 80%; margin-left: auto; margin-right: auto; padding-top: 5px; color: #1e293b;">
+        <span style="font-size: 10px; font-weight: bold; display: block;">Firma del Cliente</span>
+        <span style="font-size: 12px; font-weight: bold; text-transform: uppercase;" id="nombre-footer"></span>
     </div>
 </div>
+
+<div class="btn-group">
+    <button class="btn-clear" onclick="limpiar()">🔄 REPETIR TRAZO</button>
+    <button class="btn-download" onclick="descargarPNG()">1. DESCARGAR CONTRATO (PNG)</button>
+    <button class="btn-send" onclick="enviar()">2. ENVIAR A WHATSAPP</button>
+</div>
+
+<p class="instruccion">Primero descargue la imagen y luego presione enviar.</p>
 
 <script>
     const canvas = document.getElementById('canvas-firma');
     const ctx = canvas.getContext('2d');
     let dibujando = false;
 
-    // Ajuste de alta resolución para pantallas móviles
+    // Obtener parámetros de la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const nombre = urlParams.get('nom') || "CLIENTE";
+    const ci = urlParams.get('ci') || "";
+    const monto = urlParams.get('monto') || "0.00";
+    const moneda = urlParams.get('moneda') || "Bs.";
+
+    // Inyectar datos en el contrato
+    document.getElementById('nom-display').innerText = nombre;
+    document.getElementById('ci-display').innerText = ci;
+    document.getElementById('monto-display').innerText = `${moneda} ${monto}`;
+    document.getElementById('nombre-footer').innerText = nombre;
+
     function ajustarResolucion() {
         const rect = canvas.getBoundingClientRect();
         canvas.width = rect.width * 2;
         canvas.height = rect.height * 2;
         ctx.scale(2, 2);
-        
-        // CONFIGURACIÓN TINTA AZUL BOLÍGRAFO
         ctx.strokeStyle = "#1e3a8a"; 
         ctx.lineWidth = 2.5;
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
     }
-
-    // Obtener parámetros de la URL (Nombre y CI)
-    const urlParams = new URLSearchParams(window.location.search);
-    const nombre = urlParams.get('nom') || "CLIENTE";
-    const ci = urlParams.get('ci') || "";
-    document.getElementById('info-cliente').innerText = `${nombre} \n CI: ${ci}`;
 
     window.onload = ajustarResolucion;
 
@@ -87,38 +111,46 @@
     canvas.addEventListener('mousedown', iniciar);
     canvas.addEventListener('mousemove', mover);
     window.addEventListener('mouseup', detener);
-
     canvas.addEventListener('touchstart', iniciar, {passive: false});
     canvas.addEventListener('touchmove', mover, {passive: false});
     canvas.addEventListener('touchend', detener);
 
     function limpiar() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
-    function enviar() {
-    const firmaBase64 = canvas.toDataURL("image/png");
-    
-    if (firmaBase64.length < 2000) {
-        return alert("Por favor, realice su firma antes de enviar.");
+    // NUEVA FUNCIÓN: Descargar el contrato completo como imagen
+    function descargarPNG() {
+        html2canvas(document.getElementById('hoja-contrato')).then(canvasDescarga => {
+            const link = document.createElement('a');
+            link.download = `Contrato_${nombre}.png`;
+            link.href = canvasDescarga.toDataURL("image/png");
+            link.click();
+            alert("✅ CONTRATO GUARDADO EN GALERÍA.\n\nAhora presione el botón azul para enviarlo.");
+        });
     }
 
-    // Creamos un área de texto temporal para copiar el código
-    const el = document.createElement('textarea');
-    el.value = firmaBase64;
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
+    function enviar() {
+        const firmaBase64 = canvas.toDataURL("image/png");
+        
+        if (firmaBase64.length < 2000) {
+            return alert("Por favor, realice su firma antes de enviar.");
+        }
 
-    alert("✅ CÓDIGO COPIADO.\n\nAhora se abrirá WhatsApp. Solo debes PEGAR el mensaje y enviarlo.");
+        // Copiar código al portapapeles
+        const el = document.createElement('textarea');
+        el.value = firmaBase64;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
 
-    const tuTelefono = "591XXXXXXX"; // Pon tu número real aquí
-    const mensaje = `*INVERSIONES ROCA - FIRMA DIGITAL*%0A*Cliente:* ${nombre}%0A%0A*POR FAVOR, PEGUE EL CÓDIGO AQUÍ:*`;
-    
-    window.location.href = `https://wa.me/${tuTelefono}?text=${mensaje}`;
-}
+        alert("✅ CÓDIGO COPIADO.\n\nAdjunte la imagen descargada en WhatsApp y pegue el código.");
 
+        const tuTelefono = "591XXXXXXX"; // Reemplaza con tu número
+        const mensaje = `*INVERSIONES ROCA - FIRMA DIGITAL*%0A*Cliente:* ${nombre}%0A%0A*Adjunto envío mi contrato firmado y el código de validación:*`;
+        
+        window.location.href = `https://wa.me/${tuTelefono}?text=${mensaje}`;
+    }
 </script>
 
 </body>
 </html>
-
