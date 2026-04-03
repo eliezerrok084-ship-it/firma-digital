@@ -70,7 +70,10 @@
     const ctx = canvas.getContext('2d');
     let dibujando = false;
 
+    // CAPTURA DE PARÁMETROS DE LA URL
     const urlParams = new URLSearchParams(window.location.search);
+    
+    // Asignación de variables capturando EXACTAMENTE lo que envía la función
     const nom = urlParams.get('nom') || "SIN NOMBRE";
     const ci = urlParams.get('ci') || "";
     const dir = urlParams.get('dir') || "NO ESPECIFICADA";
@@ -79,11 +82,11 @@
     const intP = urlParams.get('int') || "0";
     const n = urlParams.get('n') || "0";
     const mod = parseInt(urlParams.get('mod')) || 30;
-    const fD = urlParams.get('fD') || "";
+    const fdes = urlParams.get('fdes') || ""; // Coincide con fdes enviado
     const f1 = urlParams.get('f1') || "";
     const cf = urlParams.get('cf') || "0.00";
     const lit = urlParams.get('lit') || "";
-    const met = urlParams.get('met') || "";
+    const metodo = urlParams.get('metodo') || ""; // Coincide con metodo enviado
     const ref = urlParams.get('ref') || "";
     const moraV = urlParams.get('mora') || "0.00";
 
@@ -91,6 +94,7 @@
     const etiquetaPlazo = nombresPlazo[mod] || "Personalizado";
     const textoDias = (mod === 1) ? "Día" : "Días";
 
+    // INYECCIÓN EN EL HTML (Esto llenará tus círculos rojos)
     document.getElementById('nom-display').innerText = nom;
     document.getElementById('ci-display').innerText = ci;
     document.getElementById('dir-display').innerText = dir;
@@ -102,14 +106,15 @@
     document.getElementById('dias-display').innerText = textoDias;
     document.getElementById('n-display').innerText = n;
     document.getElementById('cf-display').innerText = `${mon} ${cf}`;
-    document.getElementById('fdes-display').innerText = fD;
+    document.getElementById('fdes-display').innerText = fdes;
     document.getElementById('f1-display').innerText = f1;
-    document.getElementById('metodo-display').innerText = met;
+    document.getElementById('metodo-display').innerText = metodo;
     document.getElementById('ref-display').innerText = ref ? `(${ref})` : "";
     document.getElementById('mora-display').innerText = `${mon} ${moraV}`;
     document.getElementById('footer-nom').innerText = nom;
     document.getElementById('footer-ci').innerText = `C.I.: ${ci}`;
 
+    // LÓGICA DEL CANVAS
     function ajustarResolucion() {
         const rect = canvas.getBoundingClientRect();
         canvas.width = rect.width * 2;
