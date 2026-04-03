@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Firma Digital - Inversiones ROCA</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; padding: 10px; box-sizing: border-box; }
+        .card { background: #ffffff; color: #1e293b; width: 100%; max-width: 420px; border-radius: 16px; padding: 25px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); text-align: center; }
+        h2 { margin: 0 0 5px 0; color: #1e3a8a; font-size: 22px; letter-spacing: -0.5px; }
+        .cliente-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 10px; margin-bottom: 20px; font-weight: 600; color: #334155; font-size: 14px; }
+        canvas { border: 2px dashed #cbd5e1; border-radius: 12px; background: #fff; touch-action: none; width: 100%; height: 280px; display: block; cursor: crosshair; }
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+        button { border: none; padding: 16px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 14px; transition: all 0.2s; }
+        .btn-clear { background: #f1f5f9; color: #64748b; }
+        .btn-send { background: #1e3a8a; color: white; box-shadow: 0 4px 6px -1px rgba(30, 58, 138, 0.3); }
+        .btn-send:active { transform: scale(0.96); }
+        .instruccion { font-size: 12px; color: #94a3b8; margin-bottom: 10px; font-style: italic; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>INVERSIONES ROCA</h2>
+    <div class="cliente-box" id="info-cliente">Cargando datos del cliente...</div>
+    
+    <p class="instruccion">Firme aquí con su dedo (Trazo Azul Marino)</p>
+    <canvas id="canvas-firma"></canvas>
+
+    <div class="btn-group">
+        <button class="btn-clear" onclick="limpiar()">REPETIR</button>
+        <button class="btn-send" onclick="enviar()">ENVIAR FIRMA</button>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('canvas-firma');
+    const ctx = canvas.getContext('2d');
+    let dibujando = false;
+
+    // Ajuste de alta resolución para pantallas móviles
+    function ajustarResolucion() {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * 2;
+        canvas.height = rect.height * 2;
+        ctx.scale(2, 2);
+        
+        // CONFIGURACIÓN TINTA AZUL BOLÍGRAFO
+        ctx.strokeStyle = "#1e3a8a"; 
+        ctx.lineWidth = 2.5;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+    }
+
+    // Obtener parámetros de la URL (Nombre y CI)
+    const urlParams = new URLSearchParams(window.location.search);
+    const nombre = urlParams.get('nom') || "CLIENTE";
+    const ci = urlParams.get('ci') || "";
+    document.getElementById('info-cliente').innerText = `${nombre} \n CI: ${ci}`;
+
+    window.onload = ajustarResolucion;
+
+    function obtenerPos(e) {
+        const r = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return { x: clientX - r.left, y: clientY - r.top };
+    }
+
+    function iniciar(e) {
+        dibujando = true;
+        const p = obtenerPos(e);
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+    }
+
+    function mover(e) {
+        if (!dibujando) return;
+        e.preventDefault();
+        const p = obtenerPos(e);
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+    }
+
+    function detener() { dibujando = false; }
+
+    canvas.addEventListener('mousedown', iniciar);
+    canvas.addEventListener('mousemove', mover);
+    window.addEventListener('mouseup', detener);
+
+    canvas.addEventListener('touchstart', iniciar, {passive: false});
+    canvas.addEventListener('touchmove', mover, {passive: false});
+    canvas.addEventListener('touchend', detener);
+
+    function limpiar() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+
+    function enviar() {
+        const firmaBase64 = canvas.toDataURL("image/png");
+        
+        // Verificamos que haya algo dibujado (longitud mínima de Base64)
+        if (firmaBase64.length < 2000) {
+            return alert("Por favor, realice su firma antes de enviar.");
+        }
+
+        // REEMPLAZA ESTE NÚMERO POR EL TUYO (Formato internacional sin el +)
+        const tuTelefono = "591XXXXXXX"; 
+        
+        const mensaje = `*INVERSIONES ROCA - FIRMA DIGITAL*%0A` +
+                         `*Cliente:* ${nombre}%0A` +
+                         `*CI:* ${ci}%0A%0A` +
+                         `*CÓDIGO DE FIRMA (Copiar todo):*%0A${firmaBase64}`;
+
+        // Redirigir a WhatsApp
+        window.location.href = `https://wa.me/${tuTelefono}?text=${mensaje}`;
+    }
+</script>
+
+</body>
+</html>
+
