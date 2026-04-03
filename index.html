@@ -95,24 +95,28 @@
     function limpiar() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
     function enviar() {
-        const firmaBase64 = canvas.toDataURL("image/png");
-        
-        // Verificamos que haya algo dibujado (longitud mínima de Base64)
-        if (firmaBase64.length < 2000) {
-            return alert("Por favor, realice su firma antes de enviar.");
-        }
-
-        // REEMPLAZA ESTE NÚMERO POR EL TUYO (Formato internacional sin el +)
-        const tuTelefono = "591XXXXXXX"; 
-        
-        const mensaje = `*INVERSIONES ROCA - FIRMA DIGITAL*%0A` +
-                         `*Cliente:* ${nombre}%0A` +
-                         `*CI:* ${ci}%0A%0A` +
-                         `*CÓDIGO DE FIRMA (Copiar todo):*%0A${firmaBase64}`;
-
-        // Redirigir a WhatsApp
-        window.location.href = `https://wa.me/${tuTelefono}?text=${mensaje}`;
+    const firmaBase64 = canvas.toDataURL("image/png");
+    
+    if (firmaBase64.length < 2000) {
+        return alert("Por favor, realice su firma antes de enviar.");
     }
+
+    // Creamos un área de texto temporal para copiar el código
+    const el = document.createElement('textarea');
+    el.value = firmaBase64;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+
+    alert("✅ CÓDIGO COPIADO.\n\nAhora se abrirá WhatsApp. Solo debes PEGAR el mensaje y enviarlo.");
+
+    const tuTelefono = "591XXXXXXX"; // Pon tu número real aquí
+    const mensaje = `*INVERSIONES ROCA - FIRMA DIGITAL*%0A*Cliente:* ${nombre}%0A%0A*POR FAVOR, PEGUE EL CÓDIGO AQUÍ:*`;
+    
+    window.location.href = `https://wa.me/${tuTelefono}?text=${mensaje}`;
+}
+
 </script>
 
 </body>
