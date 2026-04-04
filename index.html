@@ -70,30 +70,40 @@
     const ctx = canvas.getContext('2d');
     let dibujando = false;
 
-    const urlParams = new URLSearchParams(window.location.search);
-    function getP(key) { return urlParams.get(key) || "---"; }
+    // Función de captura robusta
+    function cargarDatosContrato() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const getP = (key) => {
+            const val = urlParams.get(key);
+            return (val && val !== "null") ? val : "---";
+        };
 
-    const modVal = parseInt(getP('mod')) || 30;
-    const nombresPlazo = { 30: "Mensual", 15: "Quincenal", 7: "Semanal", 1: "Diario" };
+        const modVal = parseInt(getP('mod')) || 30;
+        const nombresPlazo = { 30: "Mensual", 15: "Quincenal", 7: "Semanal", 1: "Diario" };
 
-    document.getElementById('nom-display').innerText = getP('nom');
-    document.getElementById('ci-display').innerText = getP('ci');
-    document.getElementById('dir-display').innerText = getP('dir');
-    document.getElementById('cap-display').innerText = `${getP('mon')} ${getP('cap')}`;
-    document.getElementById('literal-display').innerText = getP('lit');
-    document.getElementById('int-display').innerText = getP('int');
-    document.getElementById('plazo-display').innerText = nombresPlazo[modVal] || "Personalizado";
-    document.getElementById('mod-display').innerText = modVal;
-    document.getElementById('dias-display').innerText = (modVal === 1) ? "Día" : "Días";
-    document.getElementById('n-display').innerText = getP('n');
-    document.getElementById('cf-display').innerText = `${getP('mon')} ${getP('cf')}`;
-    document.getElementById('fdes-display').innerText = getP('fD');
-    document.getElementById('f1-display').innerText = getP('f1');
-    document.getElementById('metodo-display').innerText = getP('met');
-    document.getElementById('ref-display').innerText = getP('ref');
-    document.getElementById('mora-display').innerText = `${getP('mon')} ${getP('mora')}`;
-    document.getElementById('footer-nom').innerText = getP('nom');
-    document.getElementById('footer-ci').innerText = `C.I.: ${getP('ci')}`;
+        // Inyección de datos
+        document.getElementById('nom-display').innerText = getP('nom');
+        document.getElementById('ci-display').innerText = getP('ci');
+        document.getElementById('dir-display').innerText = getP('dir');
+        document.getElementById('cap-display').innerText = getP('mon') !== "---" ? `${getP('mon')} ${getP('cap')}` : "---";
+        document.getElementById('literal-display').innerText = getP('lit');
+        document.getElementById('int-display').innerText = getP('int');
+        document.getElementById('plazo-display').innerText = nombresPlazo[modVal] || "Personalizado";
+        document.getElementById('mod-display').innerText = modVal;
+        document.getElementById('dias-display').innerText = (modVal === 1) ? "Día" : "Días";
+        document.getElementById('n-display').innerText = getP('n');
+        document.getElementById('cf-display').innerText = getP('mon') !== "---" ? `${getP('mon')} ${getP('cf')}` : "---";
+        document.getElementById('fdes-display').innerText = getP('fD');
+        document.getElementById('f1-display').innerText = getP('f1');
+        document.getElementById('metodo-display').innerText = getP('met');
+        document.getElementById('ref-display').innerText = getP('ref');
+        document.getElementById('mora-display').innerText = getP('mon') !== "---" ? `${getP('mon')} ${getP('mora')}` : "---";
+        document.getElementById('footer-nom').innerText = getP('nom');
+        document.getElementById('footer-ci').innerText = `C.I.: ${getP('ci')}`;
+    }
+
+    // Asegurar que los datos se carguen cuando el DOM esté listo
+    window.addEventListener('DOMContentLoaded', cargarDatosContrato);
 
     function ajustarResolucion() {
         const rect = canvas.getBoundingClientRect();
@@ -120,15 +130,16 @@
     function descargarPNG() {
         html2canvas(document.getElementById('hoja-contrato'), { scale: 3 }).then(canvasRes => {
             const link = document.createElement('a');
-            link.download = `Contrato_${getP('nom')}.png`;
+            link.download = `Contrato_${document.getElementById('nom-display').innerText}.png`;
             link.href = canvasRes.toDataURL("image/png");
             link.click();
         });
     }
 
     function enviar() {
-        const mensaje = `*CONTRATO FIRMADO - INVERSIONES ROCA*%0A*Cliente:* ${getP('nom')}%0A*C.I.:* ${getP('ci')}`;
-        // Reemplazado con tu número asignado
+        const nom = document.getElementById('nom-display').innerText;
+        const ci = document.getElementById('ci-display').innerText;
+        const mensaje = `*CONTRATO FIRMADO - INVERSIONES ROCA*%0A*Cliente:* ${nom}%0A*C.I.:* ${ci}`;
         window.location.href = `https://wa.me/59175475544?text=${mensaje}`;
     }
 </script>
