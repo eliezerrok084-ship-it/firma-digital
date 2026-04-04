@@ -55,7 +55,7 @@
     <div class="firma-linea">
         <small style="display:block; font-weight:normal; text-transform:none;">Firma del Cliente</small>
         <span id="footer-nom"></span><br>
-        <small id="footer-ci" style="text-transform:none;"></small>
+        <small style="text-transform:none;">C.I.: <span id="footer-ci"></span></small>
     </div>
 </div>
 
@@ -70,10 +70,9 @@
     const ctx = canvas.getContext('2d');
     let dibujando = false;
 
-    // CAPTURA DE PARÁMETROS
+    // CAPTURA DE PARÁMETROS DE LA URL
     const urlParams = new URLSearchParams(window.location.search);
     
-    // Asignación con nombres idénticos a los enviados
     const nom = urlParams.get('nom') || "SIN NOMBRE";
     const ci = urlParams.get('ci') || "";
     const dir = urlParams.get('dir') || "NO ESPECIFICADA";
@@ -94,7 +93,7 @@
     const etiquetaPlazo = nombresPlazo[mod] || "Personalizado";
     const textoDias = (mod === 1) ? "Día" : "Días";
 
-    // INYECCIÓN EN EL HTML (Esto soluciona los campos vacíos de tu imagen)
+    // ASIGNACIÓN AL DOM (LLENADO DE CÍRCULOS ROJOS)
     document.getElementById('nom-display').innerText = nom;
     document.getElementById('ci-display').innerText = ci;
     document.getElementById('dir-display').innerText = dir;
@@ -112,9 +111,8 @@
     document.getElementById('ref-display').innerText = ref ? `(${ref})` : "";
     document.getElementById('mora-display').innerText = `${mon} ${moraV}`;
     document.getElementById('footer-nom').innerText = nom;
-    document.getElementById('footer-ci').innerText = `C.I.: ${ci}`;
+    document.getElementById('footer-ci').innerText = ci;
 
-    // LÓGICA DEL CANVAS
     function ajustarResolucion() {
         const rect = canvas.getBoundingClientRect();
         canvas.width = rect.width * 2;
@@ -156,7 +154,7 @@
     }
 
     function enviar() {
-        const mensaje = `*CONTRATO FIRMADO - INVERSIONES ROCA*%0A*Cliente:* ${nom}%0A*C.I.:* ${ci}%0A%0A_Adjunte la imagen descargada y pegue su firma aquí._`;
+        const mensaje = `*CONTRATO FIRMADO - INVERSIONES ROCA*%0A*Cliente:* ${nom}%0A*C.I.:* ${ci}%0A%0A_Adjunte la imagen descargada._`;
         window.location.href = `https://wa.me/59175475544?text=${mensaje}`;
     }
 </script>
