@@ -7,115 +7,129 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; background: #0f172a; color: #1e293b; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 10px; box-sizing: border-box; }
-        .card { background: #ffffff; width: 100%; max-width: 450px; padding: 25px; border-radius: 4px; box-sizing: border-box; margin-bottom: 20px; }
+        .card { background: #ffffff; width: 100%; max-width: 450px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border-radius: 4px; margin-bottom: 20px; box-sizing: border-box; }
+        .header { text-align: center; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px; }
+        .header h2 { margin: 0; font-size: 22px; font-weight: 800; }
         .cuerpo { font-size: 14px; line-height: 1.5; text-align: justify; }
-        canvas { border: 1px dashed #cbd5e1; border-radius: 8px; background: #fff; width: 100%; height: 180px; margin: 15px 0; touch-action: none; }
-        .firma-linea { border-top: 1.5px solid #000; width: 80%; margin: 10px auto; padding-top: 5px; text-align: center; font-weight: bold; text-transform: uppercase; }
-        button { border: none; padding: 16px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; margin-bottom: 10px; }
+        .seccion-gris { background: #f8fafc; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; margin: 15px 0; font-size: 12px; }
+        canvas { border: 1px dashed #cbd5e1; border-radius: 8px; background: #fff; touch-action: none; width: 100%; height: 180px; display: block; margin: 15px 0; }
+        .firma-linea { border-top: 1.5px solid #000; width: 80%; margin: 10px auto; padding-top: 5px; text-align: center; font-weight: bold; font-size: 13px; text-transform: uppercase; }
+        .btn-group { width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 10px; padding-bottom: 30px; }
+        button { border: none; padding: 16px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 14px; }
+        .btn-clear { background: #f1f5f9; color: #64748b; }
+        .btn-download { background: #10b981; color: white; }
+        .btn-send { background: #1e3a8a; color: white; }
     </style>
 </head>
 <body>
 
 <div class="card" id="hoja-contrato">
-    <div style="text-align:center;">
-        <h2 style="margin:0;">CONTRATO DE CRÉDITO</h2>
-        <small>Documento Privado</small>
+    <div class="header">
+        <h2>CONTRATO DE CRÉDITO</h2>
+        <small>Documento Privado - Inversiones ROCA</small>
     </div>
     
     <div class="cuerpo">
-        <br><b>Yo</b> <span id="nom-display"></span> con C.I. / DNI: <b id="ci-display"></b>, con domicilio en <b id="dir-display"></b>, 
-        declaro haber recibido en condición de Préstamo por parte de Eliezer Roca, la suma de <b id="cap-display"></b><br>
-        <b>(SON:</b> <span id="literal-display"></span><b>)</b><br>
-        Con un <b>Interés: (<span id="int-display"></span>%),</b> <span id="plazo-label"></span> (Cada <span id="mod-display"></span> <span id="dias-label"></span>).<br><br>
+        <b>Yo</b> <span id="nom-display">---</span> con C.I. / DNI: <b id="ci-display">---</b>, con domicilio en <b id="dir-display">---</b>, 
+        declaro haber recibido en condición de Préstamo por parte de Eliezer Roca, la suma de <b id="cap-display">---</b><br>
+        <b>(SON:</b> <span id="literal-display">---</span><b>)</b><br>
+        Con un <b>Interés: (<span id="int-display">0</span>%),</b> <span id="plazo-display">---</span> (Cada <span id="mod-display">---</span> <span id="dias-display">---</span>).<br>
+        Por lo que me comprometo a pagar bajo los términos y condiciones, en el plazo establecido.<br><br>
         
-        <b>Cronograma:</b> <span id="n-display"></span> Cuotas de <span id="cf-display"></span><br>
-        <b>Fecha de Desembolso:</b> <span id="fdes-display"></span><br>
-        <b>Fecha 1ra. Cuota:</b> <span id="f1-display"></span><br><br>
+        <b>Cronograma:</b> <span id="n-display">0</span> Cuotas de <span id="cf-display">---</span><br>
+        <b>Fecha de Desembolso:</b> <span id="fdes-display">---</span><br>
+        <b>Fecha 1ra. Cuota:</b> <span id="f1-display">---</span><br><br>
         
-        <b>Método:</b> <span id="metodo-display"></span><br>
-        <b>Comp. N°:</b> <span id="ref-display"></span>
+        <b>Método:</b> <span id="metodo-display">---</span><br>
+        <b>Comp. N°:</b> <span id="ref-display">---</span>
 
-        <div style="background:#f8fafc; padding:10px; border-radius:8px; margin-top:15px; font-size:12px;">
+        <div class="seccion-gris">
             <b>Términos y Condiciones:</b><br>
-            1. PRIMERA: Mora diaria de <span id="mora-display"></span>.<br>
-            2. SEGUNDA: Intereses capitalizables.
+            <p>1. PRIMERA: Cláusula de Mora. En caso de incumplimiento, se aplicará un interés por mora diaria de <span id="mora-display">---</span>.</p>
+            <p>2. SEGUNDA: Los intereses no pagados se capitalizarán.</p>
         </div>
     </div>
 
     <canvas id="canvas-firma"></canvas>
 
     <div class="firma-linea">
-        <small style="display:block; font-weight:normal;">Firma del Cliente</small>
-        <span id="footer-nom"></span><br>
-        <small id="footer-ci"></small>
+        <small style="display:block; font-weight:normal; text-transform:none;">Firma del Cliente</small>
+        <span id="footer-nom">---</span><br>
+        <small id="footer-ci" style="text-transform:none;">C.I.: ---</small>
     </div>
 </div>
 
-<div style="width: 100%; max-width: 450px;">
-    <button style="background: #f1f5f9; color: #64748b;" onclick="limpiar()">🔄 REPETIR TRAZO</button>
-    <button style="background: #10b981; color: white;" onclick="descargarPNG()">1. DESCARGAR CONTRATO (PNG)</button>
+<div class="btn-group">
+    <button class="btn-clear" onclick="limpiar()">🔄 REPETIR TRAZO</button>
+    <button class="btn-download" onclick="descargarPNG()">1. DESCARGAR CONTRATO (PNG)</button>
+    <button class="btn-send" onclick="enviar()">2. ENVIAR A WHATSAPP</button>
 </div>
 
 <script>
     const canvas = document.getElementById('canvas-firma');
     const ctx = canvas.getContext('2d');
-    const urlParams = new URLSearchParams(window.location.search);
-    
-    // Captura segura de datos
-    const nom = urlParams.get('nom') || "---";
-    const ci = urlParams.get('ci') || "---";
-    const mod = parseInt(urlParams.get('mod')) || 30;
-    const mon = urlParams.get('mon') || "Bs.";
-
-    const plazos = { 30: "Mensual", 15: "Quincenal", 7: "Semanal", 1: "Diario" };
-
-    // Inyectar en los campos
-    document.getElementById('nom-display').innerText = nom;
-    document.getElementById('ci-display').innerText = ci;
-    document.getElementById('dir-display').innerText = urlParams.get('dir') || "---";
-    document.getElementById('cap-display').innerText = mon + " " + (urlParams.get('cap') || "0.00");
-    document.getElementById('literal-display').innerText = urlParams.get('lit') || "---";
-    document.getElementById('int-display').innerText = urlParams.get('int') || "0";
-    document.getElementById('plazo-label').innerText = plazos[mod] || "Personalizado";
-    document.getElementById('mod-display').innerText = mod;
-    document.getElementById('dias-label').innerText = (mod === 1) ? "Día" : "Días";
-    document.getElementById('n-display').innerText = urlParams.get('n') || "0";
-    document.getElementById('cf-display').innerText = mon + " " + (urlParams.get('cf') || "0.00");
-    document.getElementById('fdes-display').innerText = urlParams.get('fD') || "---";
-    document.getElementById('f1-display').innerText = urlParams.get('f1') || "---";
-    document.getElementById('metodo-display').innerText = urlParams.get('met') || "---";
-    document.getElementById('ref-display').innerText = urlParams.get('ref') || "---";
-    document.getElementById('mora-display').innerText = mon + " " + (urlParams.get('mora') || "0.00");
-    document.getElementById('footer-nom').innerText = nom;
-    document.getElementById('footer-ci').innerText = "C.I.: " + ci;
-
-    // Lógica de firma
     let dibujando = false;
-    function ajustar() {
-        const r = canvas.getBoundingClientRect();
-        canvas.width = r.width * 2; canvas.height = r.height * 2;
-        ctx.scale(2, 2); ctx.lineWidth = 2; ctx.lineCap = "round"; ctx.strokeStyle = "#1e3a8a";
-    }
-    window.onload = ajustar;
 
-    function pos(e) {
+    const urlParams = new URLSearchParams(window.location.search);
+    function getP(key) { return urlParams.get(key) || "---"; }
+
+    const modVal = parseInt(getP('mod')) || 30;
+    const nombresPlazo = { 30: "Mensual", 15: "Quincenal", 7: "Semanal", 1: "Diario" };
+
+    document.getElementById('nom-display').innerText = getP('nom');
+    document.getElementById('ci-display').innerText = getP('ci');
+    document.getElementById('dir-display').innerText = getP('dir');
+    document.getElementById('cap-display').innerText = `${getP('mon')} ${getP('cap')}`;
+    document.getElementById('literal-display').innerText = getP('lit');
+    document.getElementById('int-display').innerText = getP('int');
+    document.getElementById('plazo-display').innerText = nombresPlazo[modVal] || "Personalizado";
+    document.getElementById('mod-display').innerText = modVal;
+    document.getElementById('dias-display').innerText = (modVal === 1) ? "Día" : "Días";
+    document.getElementById('n-display').innerText = getP('n');
+    document.getElementById('cf-display').innerText = `${getP('mon')} ${getP('cf')}`;
+    document.getElementById('fdes-display').innerText = getP('fD');
+    document.getElementById('f1-display').innerText = getP('f1');
+    document.getElementById('metodo-display').innerText = getP('met');
+    document.getElementById('ref-display').innerText = getP('ref');
+    document.getElementById('mora-display').innerText = `${getP('mon')} ${getP('mora')}`;
+    document.getElementById('footer-nom').innerText = getP('nom');
+    document.getElementById('footer-ci').innerText = `C.I.: ${getP('ci')}`;
+
+    function ajustarResolucion() {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * 2; canvas.height = rect.height * 2;
+        ctx.scale(2, 2); ctx.strokeStyle = "#1e3a8a"; ctx.lineWidth = 2.5; ctx.lineCap = "round";
+    }
+    window.onload = ajustarResolucion;
+
+    function obtenerPos(e) {
         const r = canvas.getBoundingClientRect();
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
         const clientY = e.touches ? e.touches[0].clientY : e.clientY;
         return { x: clientX - r.left, y: clientY - r.top };
     }
+    function iniciar(e) { dibujando = true; ctx.beginPath(); const p = obtenerPos(e); ctx.moveTo(p.x, p.y); }
+    function mover(e) { if (!dibujando) return; e.preventDefault(); const p = obtenerPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); }
+    function detener() { dibujando = false; }
+    
+    canvas.addEventListener('mousedown', iniciar); canvas.addEventListener('mousemove', mover); window.addEventListener('mouseup', detener);
+    canvas.addEventListener('touchstart', iniciar, {passive: false}); canvas.addEventListener('touchmove', mover, {passive: false}); canvas.addEventListener('touchend', detener);
 
-    canvas.addEventListener('mousedown', (e) => { dibujando = true; ctx.beginPath(); const p = pos(e); ctx.moveTo(p.x, p.y); });
-    canvas.addEventListener('mousemove', (e) => { if(!dibujando) return; e.preventDefault(); const p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); });
-    window.addEventListener('mouseup', () => dibujando = false);
-    canvas.addEventListener('touchstart', (e) => { dibujando = true; ctx.beginPath(); const p = pos(e); ctx.moveTo(p.x, p.y); }, {passive:false});
-    canvas.addEventListener('touchmove', (e) => { if(!dibujando) return; e.preventDefault(); const p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); }, {passive:false});
+    function limpiar() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
-    function limpiar() { ctx.clearRect(0,0, canvas.width, canvas.height); }
     function descargarPNG() {
-        html2canvas(document.getElementById('hoja-contrato'), { scale: 3 }).then(cv => {
-            const a = document.createElement('a'); a.download = `Contrato_${nom}.png`; a.href = cv.toDataURL(); a.click();
+        html2canvas(document.getElementById('hoja-contrato'), { scale: 3 }).then(canvasRes => {
+            const link = document.createElement('a');
+            link.download = `Contrato_${getP('nom')}.png`;
+            link.href = canvasRes.toDataURL("image/png");
+            link.click();
         });
+    }
+
+    function enviar() {
+        const mensaje = `*CONTRATO FIRMADO - INVERSIONES ROCA*%0A*Cliente:* ${getP('nom')}%0A*C.I.:* ${getP('ci')}`;
+        // Reemplazado con tu número asignado
+        window.location.href = `https://wa.me/59175475544?text=${mensaje}`;
     }
 </script>
 </body>
