@@ -29,7 +29,7 @@
         <small>Documento Privado</small>
     </div>
     
-    <div class="cuerpo" id="ticket-content">
+    <div class="cuerpo">
         <b>Yo</b> <span id="nom-display"></span> con C.I. / DNI: <b id="ci-display"></b>, con domicilio en <b id="dir-display"></b>, 
         declaro haber recibido en condición de Préstamo por parte de Eliezer Roca, la suma de <b id="cap-display"></b><br>
         <b>(SON:</b> <span id="literal-display"></span><b>)</b><br>
@@ -70,30 +70,31 @@
     const ctx = canvas.getContext('2d');
     let dibujando = false;
 
+    // Obtener parámetros de URL
     const urlParams = new URLSearchParams(window.location.search);
     
-    // Mapeo exacto de variables recibidas
-    const nom = urlParams.get('nom') || "SIN NOMBRE";
-    const ci = urlParams.get('ci') || "";
+    // Inyectar datos capturados
+    const nom = urlParams.get('nom') || "---";
+    const ci = urlParams.get('ci') || "---";
     const dir = urlParams.get('dir') || "NO ESPECIFICADA";
     const cap = urlParams.get('cap') || "0.00";
     const mon = urlParams.get('mon') || "Bs.";
     const intP = urlParams.get('int') || "0";
     const n = urlParams.get('n') || "0";
     const mod = parseInt(urlParams.get('mod')) || 30;
-    const fD = urlParams.get('fD') || "";
-    const f1 = urlParams.get('f1') || "";
+    const fD = urlParams.get('fD') || "---";
+    const f1 = urlParams.get('f1') || "---";
     const cf = urlParams.get('cf') || "0.00";
-    const lit = urlParams.get('lit') || "";
-    const metodo = urlParams.get('met') || "";
-    const ref = urlParams.get('ref') || "";
+    const lit = urlParams.get('lit') || "---";
+    const metodo = urlParams.get('met') || "---";
+    const ref = urlParams.get('ref') || "---";
     const moraV = urlParams.get('mora') || "0.00";
 
     const nombresPlazo = { 30: "Mensual", 15: "Quincenal", 7: "Semanal", 1: "Diario" };
     const etiquetaPlazo = nombresPlazo[mod] || "Personalizado";
     const textoDias = (mod === 1) ? "Día" : "Días";
 
-    // Inyección en el DOM
+    // Llenado de IDs (Sin omitir ninguno)
     document.getElementById('nom-display').innerText = nom;
     document.getElementById('ci-display').innerText = ci;
     document.getElementById('dir-display').innerText = dir;
@@ -108,11 +109,12 @@
     document.getElementById('fdes-display').innerText = fD;
     document.getElementById('f1-display').innerText = f1;
     document.getElementById('metodo-display').innerText = metodo;
-    document.getElementById('ref-display').innerText = ref ? `(${ref})` : "";
+    document.getElementById('ref-display').innerText = ref;
     document.getElementById('mora-display').innerText = `${mon} ${moraV}`;
     document.getElementById('footer-nom').innerText = nom;
     document.getElementById('footer-ci').innerText = `C.I.: ${ci}`;
 
+    // Lógica del Canvas
     function ajustarResolucion() {
         const rect = canvas.getBoundingClientRect();
         canvas.width = rect.width * 2;
@@ -154,10 +156,9 @@
     }
 
     function enviar() {
-        const mensaje = `*CONTRATO FIRMADO - INVERSIONES ROCA*%0A*Cliente:* ${nom}%0A*C.I.:* ${ci}%0A%0A_Adjunte la imagen descargada y pegue su firma aquí._`;
+        const mensaje = `*CONTRATO FIRMADO - INVERSIONES ROCA*%0A*Cliente:* ${nom}%0A*C.I.:* ${ci}%0A%0A_Adjunto contrato firmado._`;
         window.location.href = `https://wa.me/59175475544?text=${mensaje}`;
     }
 </script>
 </body>
 </html>
-
