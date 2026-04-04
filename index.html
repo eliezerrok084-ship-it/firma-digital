@@ -70,10 +70,10 @@
     const ctx = canvas.getContext('2d');
     let dibujando = false;
 
-    // CAPTURA DE PARÁMETROS DE LA URL
+    // CAPTURA DE PARÁMETROS
     const urlParams = new URLSearchParams(window.location.search);
     
-    // Asignación de variables capturando EXACTAMENTE lo que envía la función
+    // Asignación con nombres idénticos a los enviados
     const nom = urlParams.get('nom') || "SIN NOMBRE";
     const ci = urlParams.get('ci') || "";
     const dir = urlParams.get('dir') || "NO ESPECIFICADA";
@@ -82,11 +82,11 @@
     const intP = urlParams.get('int') || "0";
     const n = urlParams.get('n') || "0";
     const mod = parseInt(urlParams.get('mod')) || 30;
-    const fdes = urlParams.get('fdes') || ""; // Coincide con fdes enviado
+    const fdes = urlParams.get('fdes') || ""; 
     const f1 = urlParams.get('f1') || "";
     const cf = urlParams.get('cf') || "0.00";
     const lit = urlParams.get('lit') || "";
-    const metodo = urlParams.get('metodo') || ""; // Coincide con metodo enviado
+    const metodo = urlParams.get('metodo') || ""; 
     const ref = urlParams.get('ref') || "";
     const moraV = urlParams.get('mora') || "0.00";
 
@@ -94,7 +94,7 @@
     const etiquetaPlazo = nombresPlazo[mod] || "Personalizado";
     const textoDias = (mod === 1) ? "Día" : "Días";
 
-    // INYECCIÓN EN EL HTML (Esto llenará tus círculos rojos)
+    // INYECCIÓN EN EL HTML (Esto soluciona los campos vacíos de tu imagen)
     document.getElementById('nom-display').innerText = nom;
     document.getElementById('ci-display').innerText = ci;
     document.getElementById('dir-display').innerText = dir;
