@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Firma de Contrato </title>
+    <title>Firma de Contrato</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
@@ -36,7 +36,6 @@
         .btn-clear { background: #f1f5f9; color: #64748b; }
         .btn-pdf { background: #e11d48; color: white; }
         .btn-download { background: #10b981; color: white; }
-        .btn-send { background: #1e3a8a; color: white; }
     </style>
 </head>
 <body>
@@ -44,7 +43,7 @@
 <div class="card" id="hoja-contrato">
     <div class="header">
         <h2>CONTRATO DE PRÉSTAMO</h2>
-        <small>Documento</small>
+        <small>Documento Privado - Inversiones ROCA</small>
     </div>
     
     <div class="cuerpo">
@@ -64,7 +63,7 @@
         
         <p><b>CUARTA:</b> El DEUDOR garantiza el fiel cumplimiento de la obligación contraída con todos sus bienes muebles e inmuebles, habidos y por haber, presentes y futuros sin exclusión alguna.</p>
         
-        <p><b>QUINTA:</b> El incumplimiento en el pago de una sola cuota hará que la totalidad de la deuda se considere de plazo vencido, líquido y exigible. En tal caso el ACREEDOR queda facultado para exigir el <strong>PAGO TOTAL</strong> del capital adeudado, más  los intereses generados y los gastos (administrativos y judiciales), el cual deberá ser cancelado por el DEUDOR en su integridad en un<strong>plazo máximo de 72 horas</strong> calendario a partir de la notificación o requerimiento.</p>
+        <p><b>QUINTA:</b> El incumplimiento en el pago de una sola cuota hará que la totalidad de la deuda se considere de plazo vencido, líquido y exigible. En tal caso el ACREEDOR queda facultado para exigir el <strong>PAGO TOTAL</strong> del capital adeudado, más los intereses generados y los gastos (administrativos y judiciales), el cual deberá ser cancelado por el DEUDOR en su integridad en un <strong>plazo máximo de 72 horas</strong> calendario a partir de la notificación o requerimiento.</p>
         
         <p><b>SEXTA:</b> Declaro mi plena conformidad con todas las cláusulas, términos y condiciones establecidas.</p>
     </div>
@@ -101,7 +100,6 @@
     <button class="btn-clear" onclick="limpiar()">🔄 REPETIR TRAZO</button>
     <button class="btn-pdf" onclick="descargarPDF()">📄 DESCARGAR (PDF)</button>
     <button class="btn-download" onclick="descargarPNG()">🖼️ GUARDAR IMAGEN (PNG)</button>
-   
 </div>
 
 <script>
@@ -113,27 +111,34 @@
         const urlParams = new URLSearchParams(window.location.search);
         const getP = (key) => {
             const val = urlParams.get(key);
-            return (val && val !== "null" && val !== "") ? val : "---";
+            // Blindaje contra nulos o vacíos
+            return (val && val !== "null" && val !== "") ? decodeURIComponent(val) : "---";
         };
 
+        const moneda = getP('mon');
         const modVal = parseInt(getP('mod')) || 30;
         const nombresPlazo = { 30: "Mensual", 15: "Quincenal", 7: "Semanal", 1: "Diario" };
-        const moneda = getP('mon');
 
+        // Carga de datos principales
         document.getElementById('nom-display').innerText = getP('nom');
         document.getElementById('ci-display').innerText = getP('ci');
         document.getElementById('dir-display').innerText = getP('dir');
-        document.getElementById('cap-display').innerText = (moneda !== "---") ? `${moneda} ${getP('cap')}` : "---";
+        
+        // Carga de capital e intereses
+        document.getElementById('cap-display').innerText = (moneda !== "---") ? `${moneda} ${getP('cap')}` : getP('cap');
         document.getElementById('literal-display').innerText = getP('lit');
         document.getElementById('int-display').innerText = getP('int');
         document.getElementById('plazo-display').innerText = nombresPlazo[modVal] || "Personalizado";
         document.getElementById('n-display').innerText = getP('n');
-        document.getElementById('cf-display').innerText = (moneda !== "---") ? `${moneda} ${getP('cf')}` : "---";
+        document.getElementById('cf-display').innerText = (moneda !== "---") ? `${moneda} ${getP('cf')}` : getP('cf');
+        
+        // Carga de fechas y mora
         document.getElementById('fdes-display').innerText = getP('fD');
         document.getElementById('f1-display').innerText = getP('f1');
         document.getElementById('metodo-display').innerText = getP('met');
-        document.getElementById('ref-display').innerText = getP('ref') !== "---" ? `(${getP('ref')})` : "";
-        document.getElementById('mora-display').innerText = (moneda !== "---") ? `${moneda} ${getP('mora')}` : "---";
+        document.getElementById('mora-display').innerText = (moneda !== "---") ? `${moneda} ${getP('mora')}` : getP('mora');
+
+        // Carga de datos en el pie de firma (Corrección observación 2 y 3)
         document.getElementById('footer-nom').innerText = getP('nom');
         document.getElementById('footer-ci').innerText = `C.I.: ${getP('ci')}`;
     }
@@ -183,10 +188,10 @@
     function descargarPNG() {
         const tarjeta = document.getElementById('hoja-contrato');
         tarjeta.classList.add('modo-captura');
-        
         html2canvas(tarjeta, { scale: 3, useCORS: true }).then(canvasRes => {
             const link = document.createElement('a');
-            link.download = `Contrato_${document.getElementById('nom-display').innerText}.png`;
+            const nom = document.getElementById('nom-display').innerText;
+            link.download = `Contrato_${nom}.png`;
             link.href = canvasRes.toDataURL("image/png");
             link.click();
             tarjeta.classList.remove('modo-captura');
@@ -197,31 +202,17 @@
         const { jsPDF } = window.jspdf;
         const tarjeta = document.getElementById('hoja-contrato');
         const nom = document.getElementById('nom-display').innerText;
-
         tarjeta.classList.add('modo-captura');
 
         html2canvas(tarjeta, { scale: 2, useCORS: true }).then(canvasRes => {
             const imgData = canvasRes.toDataURL('image/png');
-            
-            // BLINDAJE: Ajuste dinámico de PDF para evitar cortes
-            const imgWidthInMm = 190; // Ancho estándar para PDF con márgenes
+            const imgWidthInMm = 190; 
             const pageHeightInMm = (canvasRes.height * imgWidthInMm) / canvasRes.width;
-            
-            // Creamos el PDF con la altura exacta del contenido capturado
             const pdf = new jsPDF('p', 'mm', [imgWidthInMm + 20, pageHeightInMm + 20]);
-            
             pdf.addImage(imgData, 'PNG', 10, 10, imgWidthInMm, pageHeightInMm);
             pdf.save(`CONTRATO_ROCA_${nom.replace(/\s+/g, '_')}.pdf`);
-            
             tarjeta.classList.remove('modo-captura');
         });
-    }
-
-    function enviar() {
-        const nom = document.getElementById('nom-display').innerText;
-        const ci = document.getElementById('ci-display').innerText;
-        const mensaje = `*CONTRATO FIRMADO - INVERSIONES ROCA*%0A*Cliente:* ${nom}%0A*C.I.:* ${ci}`;
-        window.location.href = `https://wa.me/59175475544?text=${mensaje}`;
     }
 </script>
 </body>
