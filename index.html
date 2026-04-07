@@ -27,13 +27,12 @@
         .grid-docs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
         .img-preview { width: 100%; border-radius: 6px; border: 1px solid #ddd; display: none; margin-top: 5px; max-height: 150px; object-fit: contain; }
 
-        /* CLASE PARA OCULTAR ELEMENTOS DURANTE CAPTURA */
-        .modo-captura input[type="file"] { display: none !important; }
+        .modo-captura input[type="file"], .modo-captura .btn-clear { display: none !important; }
         .modo-captura canvas { border: none !important; }
 
         .btn-group { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 10px; padding-bottom: 40px; }
         button { border: none; padding: 16px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 14px; text-transform: uppercase; }
-        .btn-clear { background: #f1f5f9; color: #64748b; }
+        .btn-clear { background: #f1f5f9; color: #64748b; margin-top: 10px; width: 100%; }
         .btn-pdf { background: #e11d48; color: white; }
         .btn-download { background: #10b981; color: white; }
     </style>
@@ -80,6 +79,8 @@
         <div class="huella-box">Huella<br>Digital</div>
     </div>
 
+    <button class="btn-clear" onclick="limpiar()">🔄 REPETIR TRAZO</button>
+
     <div class="seccion-docs" id="area-respaldos">
         <div class="grid-docs">
             <div>
@@ -97,7 +98,6 @@
 </div>
 
 <div class="btn-group">
-    <button class="btn-clear" onclick="limpiar()">🔄 REPETIR TRAZO</button>
     <button class="btn-pdf" onclick="descargarPDF()">📄 DESCARGAR (PDF)</button>
     <button class="btn-download" onclick="descargarPNG()">🖼️ GUARDAR IMAGEN (PNG)</button>
 </div>
@@ -107,11 +107,17 @@
     const ctx = canvas.getContext('2d');
     let dibujando = false;
 
+    // Función Blindada Estándar Bancario (Miles con coma, decimales con punto)
+    function formatearMonto(valor) {
+        const num = parseFloat(valor);
+        if (isNaN(num)) return "---";
+        return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
     function cargarDatosContrato() {
         const urlParams = new URLSearchParams(window.location.search);
         const getP = (key) => {
             const val = urlParams.get(key);
-            // Blindaje contra nulos o vacíos
             return (val && val !== "null" && val !== "") ? decodeURIComponent(val) : "---";
         };
 
@@ -119,26 +125,27 @@
         const modVal = parseInt(getP('mod')) || 30;
         const nombresPlazo = { 30: "Mensual", 15: "Quincenal", 7: "Semanal", 1: "Diario" };
 
-        // Carga de datos principales
         document.getElementById('nom-display').innerText = getP('nom');
         document.getElementById('ci-display').innerText = getP('ci');
         document.getElementById('dir-display').innerText = getP('dir');
         
-        // Carga de capital e intereses
-        document.getElementById('cap-display').innerText = (moneda !== "---") ? `${moneda} ${getP('cap')}` : getP('cap');
+        // Aplicación del formato bancario a montos
+        const capFinal = formatearMonto(getP('cap'));
+        const cuotaFinal = formatearMonto(getP('cf'));
+        const moraFinal = formatearMonto(getP('mora'));
+
+        document.getElementById('cap-display').innerText = (moneda !== "---") ? `${moneda} ${capFinal}` : capFinal;
         document.getElementById('literal-display').innerText = getP('lit');
         document.getElementById('int-display').innerText = getP('int');
         document.getElementById('plazo-display').innerText = nombresPlazo[modVal] || "Personalizado";
         document.getElementById('n-display').innerText = getP('n');
-        document.getElementById('cf-display').innerText = (moneda !== "---") ? `${moneda} ${getP('cf')}` : getP('cf');
+        document.getElementById('cf-display').innerText = (moneda !== "---") ? `${moneda} ${cuotaFinal}` : cuotaFinal;
         
-        // Carga de fechas y mora
         document.getElementById('fdes-display').innerText = getP('fD');
         document.getElementById('f1-display').innerText = getP('f1');
         document.getElementById('metodo-display').innerText = getP('met');
-        document.getElementById('mora-display').innerText = (moneda !== "---") ? `${moneda} ${getP('mora')}` : getP('mora');
+        document.getElementById('mora-display').innerText = (moneda !== "---") ? `${moneda} ${moraFinal}` : moraFinal;
 
-        // Carga de datos en el pie de firma (Corrección observación 2 y 3)
         document.getElementById('footer-nom').innerText = getP('nom');
         document.getElementById('footer-ci').innerText = `C.I.: ${getP('ci')}`;
     }
@@ -190,8 +197,7 @@
         tarjeta.classList.add('modo-captura');
         html2canvas(tarjeta, { scale: 3, useCORS: true }).then(canvasRes => {
             const link = document.createElement('a');
-            const nom = document.getElementById('nom-display').innerText;
-            link.download = `Contrato_${nom}.png`;
+            link.download = `Contrato_${document.getElementById('nom-display').innerText}.png`;
             link.href = canvasRes.toDataURL("image/png");
             link.click();
             tarjeta.classList.remove('modo-captura');
