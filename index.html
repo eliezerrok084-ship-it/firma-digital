@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Firma de Contrato - Inversiones ROCA</title>
+    <title>Firma de Contrato </title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
@@ -44,7 +44,7 @@
 <div class="card" id="hoja-contrato">
     <div class="header">
         <h2>CONTRATO DE PRÉSTAMO</h2>
-        <small>Documento Privado - Inversiones ROCA</small>
+        <small>Documento</small>
     </div>
     
     <div class="cuerpo">
@@ -52,21 +52,21 @@
         
         <p><b>PRIMERA:</b> Yo <b id="nom-display">---</b>, con C.I./DNI: <b id="ci-display">---</b>, con domicilio en <span id="dir-display">---</span>, declaro recibir de <strong>ELVIN ELIEZER ROCA RIBEIRO</strong>, con C.I./DNI: <strong>8976926</strong>, la suma de: <b id="cap-display">---</b> (SON: <span id="literal-display">---</span>), en calidad de préstamo, y a mi entera satisfacción.</p>
         
-        <p><b>SEGUNDA:</b> El interés será del <b id="int-display">0</b><b>%</b>, pagadero de forma <b id="plazo-display">---</b>. El préstamo se devolverá en <b id="n-display">0</b> <b>cuotas</b> de <b id="cf-display">---</b>.</p>
+        <p><b>SEGUNDA:</b> El interés será del <b id="int-display">0</b><b>%</b>, pagadero de forma <b id="plazo-display">---</b>. Se devolverá en <b id="n-display">0</b> <b>cuotas</b> de <b id="cf-display">---</b>.</p>
         
         <div class="seccion-datos">
             • <b>Fecha de Desembolso:</b> <span id="fdes-display">---</span><br>
-            • <b>Método:</b> <span id="metodo-display">---</span> <span id="ref-display"></span><br>
+            • <b>Método:</b> <span id="metodo-display">---</span> <br>
             • <b>Fecha Primera Cuota:</b> <span id="f1-display">---</span>
         </div>
 
         <p><b>TERCERA:</b> En caso de incumplimiento, se aplicará un <strong>interés por mora diaria</strong> de <b id="mora-display">---</b>. Los intereses no pagados se capitalizarán.</p>
         
-        <p><b>CUARTA:</b> El DEUDOR garantiza el fiel cumplimiento de la obligación contraída con todos sus bienes muebles e inmuebles, habidos y por haber, presentes y futuros.</p>
+        <p><b>CUARTA:</b> El DEUDOR garantiza el fiel cumplimiento de la obligación contraída con todos sus bienes muebles e inmuebles, habidos y por haber, presentes y futuros sin exclusión alguna.</p>
         
-        <p><b>QUINTA:</b> El incumplimiento en el pago de una sola cuota hará que la totalidad de la deuda se considere de plazo vencido. El ACREEDOR queda facultado para exigir el <strong>PAGO TOTAL</strong> en un <strong>plazo máximo de 72 horas</strong> calendario.</p>
+        <p><b>QUINTA:</b> El incumplimiento en el pago de una sola cuota hará que la totalidad de la deuda se considere de plazo vencido, líquido y exigible. En tal caso el ACREEDOR queda facultado para exigir el <strong>PAGO TOTAL</strong> del capital adeudado, más  los intereses generados y los gastos (administrativos y judiciales), el cual deberá ser cancelado por el DEUDOR en su integridad en un<strong>plazo máximo de 72 horas</strong> calendario a partir de la notificación o requerimiento.</p>
         
-        <p><b>SEXTA:</b> Declaro mi plena conformidad con todas las cláusulas y condiciones establecidas.</p>
+        <p><b>SEXTA:</b> Declaro mi plena conformidad con todas las cláusulas, términos y condiciones establecidas.</p>
     </div>
 
     <div class="contenedor-firmas">
@@ -99,9 +99,9 @@
 
 <div class="btn-group">
     <button class="btn-clear" onclick="limpiar()">🔄 REPETIR TRAZO</button>
-    <button class="btn-pdf" onclick="descargarPDF()">📄 DESCARGAR CONTRATO COMPLETO (PDF)</button>
+    <button class="btn-pdf" onclick="descargarPDF()">📄 DESCARGAR (PDF)</button>
     <button class="btn-download" onclick="descargarPNG()">🖼️ GUARDAR IMAGEN (PNG)</button>
-    <button class="btn-send" onclick="enviar()">📲 ENVIAR A WHATSAPP</button>
+   
 </div>
 
 <script>
