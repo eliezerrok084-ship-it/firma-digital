@@ -22,11 +22,11 @@
         
         .firma-linea { border-top: 1.5px solid #000; width: 90%; margin: 10px auto 0; padding-top: 5px; text-align: center; font-weight: bold; font-size: 12px; text-transform: uppercase; }
         
-        /* Sección de Documentos */
+        /* Estilos para carga de documentos */
         .seccion-docs { margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; }
-        .input-file-label { display: block; font-size: 11px; font-weight: bold; margin-bottom: 5px; color: #1e3a8a; }
         .grid-docs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-        .img-preview { width: 100%; border-radius: 6px; border: 1px solid #ddd; display: none; margin-top: 5px; }
+        .input-btn-personalizado { background: #1e3a8a; color: white; padding: 10px; border-radius: 5px; cursor: pointer; display: block; font-size: 10px; font-weight: bold; text-align: center; text-transform: uppercase; }
+        .img-preview { width: 100%; border-radius: 6px; border: 1px solid #ddd; display: none; margin-top: 5px; max-height: 150px; object-fit: contain; }
 
         .btn-group { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 10px; padding-bottom: 40px; }
         button { border: none; padding: 16px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 14px; text-transform: uppercase; }
@@ -41,7 +41,7 @@
 <div class="card" id="hoja-contrato">
     <div class="header">
         <h2>CONTRATO DE PRÉSTAMO</h2>
-        <small>Documento Privado - Inversiones ROCA</small>
+        <small> </small>
     </div>
     
     <div class="cuerpo">
@@ -49,11 +49,11 @@
         
         <p><b>PRIMERA:</b> Yo <b id="nom-display">---</b>, con C.I./DNI: <b id="ci-display">---</b>, con domicilio en <span id="dir-display">---</span>, declaro recibir de <strong>ELVIN ELIEZER ROCA RIBEIRO</strong>, con C.I./DNI: <strong>8976926</strong>, la suma de: <b id="cap-display">---</b> (SON: <span id="literal-display">---</span>), en calidad de préstamo, y a mi entera satisfacción.</p>
         
-        <p><b>SEGUNDA:</b> El interés será del <b id="int-display">0</b><b>%</b>, pagadero de forma <b id="plazo-display">---</b>. El préstamo se devolverá en <b id="n-display">0</b> <b>cuotas</b> de <b id="cf-display">---</b>.</p>
+        <p><b>SEGUNDA:</b> El interés será del <b id="int-display">0</b><b>%</b>, pagadero de forma <b id="plazo-display">---</b>. Se devolverá en <b id="n-display">0</b> <b>cuotas</b> de <b id="cf-display">---</b>.</p>
         
         <div class="seccion-datos">
             • <b>Fecha de Desembolso:</b> <span id="fdes-display">---</span><br>
-            • <b>Método:</b> <span id="metodo-display">---</span> <span id="ref-display"></span><br>
+            • <b>Método:</b> <span id="metodo-display">---</span><br>
             • <b>Fecha Primera Cuota:</b> <span id="f1-display">---</span>
         </div>
 
@@ -61,9 +61,9 @@
         
         <p><b>CUARTA:</b> El DEUDOR garantiza el fiel cumplimiento de la obligación contraída con todos sus bienes muebles e inmuebles, habidos y por haber, presentes y futuros.</p>
         
-        <p><b>QUINTA:</b> El incumplimiento en el pago de una sola cuota hará que la totalidad de la deuda se considere de plazo vencido. El ACREEDOR queda facultado para exigir el <strong>PAGO TOTAL</strong> en un <strong>plazo máximo de 72 horas</strong> calendario.</p>
+        <p><b>QUINTA:</b> El incumplimiento en el pago de una sola cuota hará que la totalidad de la deuda se considere de plazo vencido, líquido y exigible. En tal caso el ACREEDOR queda facultado para exigir el <strong>PAGO TOTAL</strong>, del capital adeudado, más los intereses generados, y los gastos (administrativos y judiciales), el cual deberá ser cancelado por el DEUDOR, en su integridad en un <strong>plazo máximo de 72 horas</strong> calendario a partir de la notificación o requerimiento.</p>
         
-        <p><b>SEXTA:</b> Declaro mi plena conformidad con todas las cláusulas y condiciones establecidas.</p>
+        <p><b>SEXTA:</b> Declaro mi plena conformidad con todas las cláusulas, términos y condiciones establecidas.</p>
     </div>
 
     <div class="contenedor-firmas">
@@ -81,13 +81,13 @@
     <div class="seccion-docs" id="area-respaldos">
         <div class="grid-docs">
             <div>
-                <label class="input-file-label">C.I. ANVERSO:</label>
-                <input type="file" accept="image/*" onchange="previsualizar(this, 'img-anverso')" id="input-anverso" style="font-size:10px; width:100%;">
+                <label for="input-anverso" class="input-btn-personalizado">📷 SUBIR FRENTE C.I.</label>
+                <input type="file" id="input-anverso" accept="image/*" onchange="previsualizar(this, 'img-anverso')" style="display: none;">
                 <img id="img-anverso" class="img-preview">
             </div>
             <div>
-                <label class="input-file-label">C.I. REVERSO:</label>
-                <input type="file" accept="image/*" onchange="previsualizar(this, 'img-reverso')" id="input-reverso" style="font-size:10px; width:100%;">
+                <label for="input-reverso" class="input-btn-personalizado">📷 SUBIR REVERSO C.I.</label>
+                <input type="file" id="input-reverso" accept="image/*" onchange="previsualizar(this, 'img-reverso')" style="display: none;">
                 <img id="img-reverso" class="img-preview">
             </div>
         </div>
@@ -98,7 +98,7 @@
     <button class="btn-clear" onclick="limpiar()">🔄 REPETIR TRAZO</button>
     <button class="btn-pdf" onclick="descargarPDF()">📄 DESCARGAR CONTRATO COMPLETO (PDF)</button>
     <button class="btn-download" onclick="descargarPNG()">🖼️ GUARDAR IMAGEN (PNG)</button>
-    <button class="btn-send" onclick="enviar()">📲 ENVIAR A WHATSAPP</button>
+    
 </div>
 
 <script>
@@ -151,8 +151,12 @@
 
     function ajustarResolucion() {
         const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width * 2; canvas.height = rect.height * 2;
-        ctx.scale(2, 2); ctx.strokeStyle = "#1e3a8a"; ctx.lineWidth = 2.5; ctx.lineCap = "round";
+        canvas.width = rect.width * 2; 
+        canvas.height = rect.height * 2;
+        ctx.scale(2, 2); 
+        ctx.strokeStyle = "#1e3a8a"; 
+        ctx.lineWidth = 2.5; 
+        ctx.lineCap = "round";
     }
     window.onload = ajustarResolucion;
 
@@ -172,7 +176,7 @@
     function limpiar() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
     function descargarPNG() {
-        html2canvas(document.getElementById('hoja-contrato'), { scale: 3 }).then(canvasRes => {
+        html2canvas(document.getElementById('hoja-contrato'), { scale: 3, useCORS: true }).then(canvasRes => {
             const link = document.createElement('a');
             link.download = `Contrato_${document.getElementById('nom-display').innerText}.png`;
             link.href = canvasRes.toDataURL("image/png");
@@ -185,42 +189,39 @@
         const tarjeta = document.getElementById('hoja-contrato');
         const nom = document.getElementById('nom-display').innerText;
 
-        // Ocultar bordes e inputs para PDF limpio
+        // OCULTAR BOTONES DE SUBIDA PARA EL PDF
+        const btnsCarga = document.querySelectorAll('.input-btn-personalizado');
+        const originalBorder = canvas.style.border;
+        
         canvas.style.border = "none";
-        document.getElementById('input-anverso').style.display = "none";
-        document.getElementById('input-reverso').style.display = "none";
+        btnsCarga.forEach(btn => btn.style.display = "none");
 
-        html2canvas(tarjeta, { scale: 2, useCORS: true }).then(canvasRes => {
-            const imgData = canvasRes.toDataURL('image/png');
-            const pdf = new jsPDF('p', 'mm', 'letter');
-            
-            const pageWidth = pdf.internal.pageSize.getWidth();
-            const pageHeight = pdf.internal.pageSize.getHeight();
-            const margen = 15;
-            const imgWidth = pageWidth - (margen * 2);
-            const imgHeight = (canvasRes.height * imgWidth) / canvasRes.width;
+        // FIX PARA LÍNEA DE ERROR: Scroll al inicio y espera de renderizado
+        window.scrollTo(0,0);
 
-            let heightLeft = imgHeight;
-            let position = margen;
+        setTimeout(() => {
+            html2canvas(tarjeta, { 
+                scale: 2, 
+                useCORS: true,
+                backgroundColor: "#ffffff",
+                scrollY: -window.scrollY
+            }).then(canvasRes => {
+                const imgData = canvasRes.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'letter');
+                
+                const pageWidth = pdf.internal.pageSize.getWidth();
+                const margen = 10;
+                const imgWidth = pageWidth - (margen * 2);
+                const imgHeight = (canvasRes.height * imgWidth) / canvasRes.width;
 
-            // PAGINACIÓN AUTOMÁTICA
-            pdf.addImage(imgData, 'PNG', margen, position, imgWidth, imgHeight);
-            heightLeft -= (pageHeight - margen);
-
-            while (heightLeft > 0) {
-                position = heightLeft - imgHeight + margen;
-                pdf.addPage();
-                pdf.addImage(imgData, 'PNG', margen, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
-            }
-
-            pdf.save(`CONTRATO_ROCA_${nom.replace(/\s+/g, '_')}.pdf`);
-            
-            // Restaurar vista
-            canvas.style.border = "1px dashed #cbd5e1";
-            document.getElementById('input-anverso').style.display = "block";
-            document.getElementById('input-reverso').style.display = "block";
-        });
+                pdf.addImage(imgData, 'PNG', margen, margen, imgWidth, imgHeight);
+                pdf.save(`CONTRATO_ROCA_${nom.replace(/\s+/g, '_')}.pdf`);
+                
+                // RESTAURAR VISTA
+                canvas.style.border = originalBorder;
+                btnsCarga.forEach(btn => btn.style.display = "block");
+            });
+        }, 350);
     }
 
     function enviar() {
