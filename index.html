@@ -15,7 +15,6 @@
         .cuerpo p { margin: 8px 0; }
         .seccion-datos { background: #f8fafc; padding: 12px; border-left: 4px solid #1e293b; border-radius: 4px; margin: 15px 0; font-size: 12px; }
         
-        /* Contenedor de Firma y Huella */
         .contenedor-firmas { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 25px; gap: 15px; }
         .bloque-firma { flex: 1; text-align: center; }
         canvas { border: 1px dashed #cbd5e1; border-radius: 8px; background: #fff; touch-action: none; width: 100%; height: 160px; display: block; }
@@ -23,10 +22,16 @@
         
         .firma-linea { border-top: 1.5px solid #000; width: 90%; margin: 10px auto 0; padding-top: 5px; text-align: center; font-weight: bold; font-size: 12px; text-transform: uppercase; }
         
+        /* Sección de Documentos */
+        .seccion-docs { margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; }
+        .input-file-label { display: block; font-size: 11px; font-weight: bold; margin-bottom: 5px; color: #1e3a8a; }
+        .grid-docs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+        .img-preview { width: 100%; border-radius: 6px; border: 1px solid #ddd; display: none; margin-top: 5px; }
+
         .btn-group { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 10px; padding-bottom: 40px; }
         button { border: none; padding: 16px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 14px; text-transform: uppercase; }
         .btn-clear { background: #f1f5f9; color: #64748b; }
-        .btn-pdf { background: #e11d48; color: white; } /* Rojo para PDF */
+        .btn-pdf { background: #e11d48; color: white; }
         .btn-download { background: #10b981; color: white; }
         .btn-send { background: #1e3a8a; color: white; }
     </style>
@@ -54,11 +59,11 @@
 
         <p><b>TERCERA:</b> En caso de incumplimiento, se aplicará un <strong>interés por mora diaria</strong> de <b id="mora-display">---</b>. Los intereses no pagados se capitalizarán.</p>
         
-        <p><b>CUARTA:</b> El DEUDOR garantiza el fiel cumplimiento de la obligación contraída en el presente contrato con todos sus bienes muebles e inmuebles, habidos y por haber, presentes y futuros, sin exclusión alguna.</p>
+        <p><b>CUARTA:</b> El DEUDOR garantiza el fiel cumplimiento de la obligación contraída con todos sus bienes muebles e inmuebles, habidos y por haber, presentes y futuros.</p>
         
-        <p><b>QUINTA:</b> El incumplimiento en el pago de una sola de las cuotas pactadas hará que la totalidad de la deuda se considere de plazo vencido, líquido y exigible. En tal caso, el ACREEDOR queda plenamente facultado para exigir el <strong>PAGO TOTAL</strong> del capital adeudado en un <strong>plazo máximo de 72 horas</strong> calendario.</p>
+        <p><b>QUINTA:</b> El incumplimiento en el pago de una sola cuota hará que la totalidad de la deuda se considere de plazo vencido. El ACREEDOR queda facultado para exigir el <strong>PAGO TOTAL</strong> en un <strong>plazo máximo de 72 horas</strong> calendario.</p>
         
-        <p><b>SEXTA:</b> Declaro mi plena conformidad con todas las cláusulas, términos y condiciones establecidas en el presente documento.</p>
+        <p><b>SEXTA:</b> Declaro mi plena conformidad con todas las cláusulas y condiciones establecidas.</p>
     </div>
 
     <div class="contenedor-firmas">
@@ -70,16 +75,29 @@
                 <small id="footer-ci" style="text-transform:none;">C.I.: ---</small>
             </div>
         </div>
-        <div class="huella-box">
-            Huella<br>Digital
+        <div class="huella-box">Huella<br>Digital</div>
+    </div>
+
+    <div class="seccion-docs" id="area-respaldos">
+        <div class="grid-docs">
+            <div>
+                <label class="input-file-label">C.I. ANVERSO:</label>
+                <input type="file" accept="image/*" onchange="previsualizar(this, 'img-anverso')" id="input-anverso" style="font-size:10px; width:100%;">
+                <img id="img-anverso" class="img-preview">
+            </div>
+            <div>
+                <label class="input-file-label">C.I. REVERSO:</label>
+                <input type="file" accept="image/*" onchange="previsualizar(this, 'img-reverso')" id="input-reverso" style="font-size:10px; width:100%;">
+                <img id="img-reverso" class="img-preview">
+            </div>
         </div>
     </div>
 </div>
 
 <div class="btn-group">
     <button class="btn-clear" onclick="limpiar()">🔄 REPETIR TRAZO</button>
-    <button class="btn-pdf" onclick="descargarPDF()">📄 DESCARGAR CONTRATO (PDF)</button>
-    <button class="btn-download" onclick="descargarPNG()">🖼️ GUARDAR COMO IMAGEN (PNG)</button>
+    <button class="btn-pdf" onclick="descargarPDF()">📄 DESCARGAR CONTRATO COMPLETO (PDF)</button>
+    <button class="btn-download" onclick="descargarPNG()">🖼️ GUARDAR IMAGEN (PNG)</button>
     <button class="btn-send" onclick="enviar()">📲 ENVIAR A WHATSAPP</button>
 </div>
 
@@ -115,6 +133,18 @@
         document.getElementById('mora-display').innerText = (moneda !== "---") ? `${moneda} ${getP('mora')}` : "---";
         document.getElementById('footer-nom').innerText = getP('nom');
         document.getElementById('footer-ci').innerText = `C.I.: ${getP('ci')}`;
+    }
+
+    function previsualizar(input, idImg) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = document.getElementById(idImg);
+                img.src = e.target.result;
+                img.style.display = "block";
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
     }
 
     window.addEventListener('DOMContentLoaded', cargarDatosContrato);
@@ -155,22 +185,41 @@
         const tarjeta = document.getElementById('hoja-contrato');
         const nom = document.getElementById('nom-display').innerText;
 
-        // Ocultar borde del canvas para el PDF
+        // Ocultar bordes e inputs para PDF limpio
         canvas.style.border = "none";
+        document.getElementById('input-anverso').style.display = "none";
+        document.getElementById('input-reverso').style.display = "none";
 
-        html2canvas(tarjeta, { scale: 3, useCORS: true }).then(canvasRes => {
+        html2canvas(tarjeta, { scale: 2, useCORS: true }).then(canvasRes => {
             const imgData = canvasRes.toDataURL('image/png');
-            const pdf = new jsPDF('p', 'mm', 'letter'); // Tamaño Carta
+            const pdf = new jsPDF('p', 'mm', 'letter');
             
             const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
             const margen = 15;
             const imgWidth = pageWidth - (margen * 2);
             const imgHeight = (canvasRes.height * imgWidth) / canvasRes.width;
 
-            pdf.addImage(imgData, 'PNG', margen, margen, imgWidth, imgHeight);
+            let heightLeft = imgHeight;
+            let position = margen;
+
+            // PAGINACIÓN AUTOMÁTICA
+            pdf.addImage(imgData, 'PNG', margen, position, imgWidth, imgHeight);
+            heightLeft -= (pageHeight - margen);
+
+            while (heightLeft > 0) {
+                position = heightLeft - imgHeight + margen;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', margen, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+            }
+
             pdf.save(`CONTRATO_ROCA_${nom.replace(/\s+/g, '_')}.pdf`);
             
-            canvas.style.border = "1px dashed #cbd5e1"; // Restaurar borde
+            // Restaurar vista
+            canvas.style.border = "1px dashed #cbd5e1";
+            document.getElementById('input-anverso').style.display = "block";
+            document.getElementById('input-reverso').style.display = "block";
         });
     }
 
