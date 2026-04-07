@@ -27,6 +27,10 @@
         .grid-docs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
         .img-preview { width: 100%; border-radius: 6px; border: 1px solid #ddd; display: none; margin-top: 5px; max-height: 150px; object-fit: contain; }
 
+        /* BLINDAJE PARA CAPTURA: Oculta los inputs reales en el PDF/PNG */
+        .capturando input[type="file"] { display: none !important; }
+        .capturando canvas { border: none !important; }
+
         .btn-group { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 10px; padding-bottom: 40px; }
         button { border: none; padding: 16px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 14px; text-transform: uppercase; }
         .btn-clear { background: #f1f5f9; color: #64748b; }
@@ -146,8 +150,6 @@
         }
     }
 
-    window.addEventListener('DOMContentLoaded', cargarDatosContrato);
-
     function ajustarResolucion() {
         const rect = canvas.getBoundingClientRect();
         canvas.width = rect.width * 2; 
@@ -157,7 +159,11 @@
         ctx.lineWidth = 2.5; 
         ctx.lineCap = "round";
     }
-    window.onload = ajustarResolucion;
+
+    window.onload = () => {
+        ajustarResolucion();
+        cargarDatosContrato();
+    };
 
     function obtenerPos(e) {
         const r = canvas.getBoundingClientRect();
@@ -175,11 +181,15 @@
     function limpiar() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
     function descargarPNG() {
-        html2canvas(document.getElementById('hoja-contrato'), { scale: 3, useCORS: true }).then(canvasRes => {
+        const tarjeta = document.getElementById('hoja-contrato');
+        tarjeta.classList.add('capturando'); // Oculta inputs
+        
+        html2canvas(tarjeta, { scale: 3, useCORS: true }).then(canvasRes => {
             const link = document.createElement('a');
             link.download = `Contrato_${document.getElementById('nom-display').innerText}.png`;
             link.href = canvasRes.toDataURL("image/png");
             link.click();
+            tarjeta.classList.remove('capturando');
         });
     }
 
@@ -188,55 +198,29 @@
         const tarjeta = document.getElementById('hoja-contrato');
         const nom = document.getElementById('nom-display').innerText;
 
-        // Limpiar interfaz para la captura
-        const inputAnverso = document.getElementById('input-anverso');
-        const inputReverso = document.getElementById('input-reverso');
-        const originalCanvasBorder = canvas.style.border;
-        
-        canvas.style.border = "none";
-        inputAnverso.style.visibility = "hidden";
-        inputReverso.style.visibility = "hidden";
+        tarjeta.classList.add('capturando'); // Ocultar bordes e inputs
 
-        // Pequeña espera para asegurar que el DOM refleje los cambios de estilo
-        setTimeout(() => {
-            html2canvas(tarjeta, { 
-                scale: 2, 
-                useCORS: true,
-                logging: false,
-                allowTaint: true
-            }).then(canvasRes => {
-                const imgData = canvasRes.toDataURL('image/png');
-                const pdf = new jsPDF('p', 'mm', 'letter');
-                
-                const pageWidth = pdf.internal.pageSize.getWidth();
-                const pageHeight = pdf.internal.pageSize.getHeight();
-                const margen = 10;
-                const imgWidth = pageWidth - (margen * 2);
-                const imgHeight = (canvasRes.height * imgWidth) / canvasRes.width;
+        html2canvas(tarjeta, { 
+            scale: 2, 
+            useCORS: true,
+            logging: false
+        }).then(canvasRes => {
+            const imgData = canvasRes.toDataURL('image/png');
+            // 'letter' (Carta) para evitar cortes extraños
+            const pdf = new jsPDF('p', 'mm', 'letter');
+            
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            const margen = 10;
+            const imgWidth = pageWidth - (margen * 2);
+            const imgHeight = (canvasRes.height * imgWidth) / canvasRes.width;
 
-                let heightLeft = imgHeight;
-                let position = margen;
-
-                // Primera página
-                pdf.addImage(imgData, 'PNG', margen, position, imgWidth, imgHeight);
-                heightLeft -= (pageHeight - margen);
-
-                // Páginas adicionales si el contenido excede el largo (Paginación blindada)
-                while (heightLeft > 0) {
-                    position = heightLeft - imgHeight + margen;
-                    pdf.addPage();
-                    pdf.addImage(imgData, 'PNG', margen, position, imgWidth, imgHeight);
-                    heightLeft -= pageHeight;
-                }
-
-                pdf.save(`CONTRATO_ROCA_${nom.replace(/\s+/g, '_')}.pdf`);
-                
-                // Restaurar interfaz
-                canvas.style.border = originalCanvasBorder;
-                inputAnverso.style.visibility = "visible";
-                inputReverso.style.visibility = "visible";
-            });
-        }, 100);
+            // Centrado vertical básico
+            pdf.addImage(imgData, 'PNG', margen, margen, imgWidth, imgHeight);
+            
+            pdf.save(`CONTRATO_ROCA_${nom.replace(/\s+/g, '_')}.pdf`);
+            tarjeta.classList.remove('capturando');
+        });
     }
 
     function enviar() {
