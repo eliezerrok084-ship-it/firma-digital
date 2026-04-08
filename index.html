@@ -122,7 +122,7 @@
     function cargarDatosContrato() {
         const urlParams = new URLSearchParams(window.location.search);
         
-        // --- INICIO PROTOCOLO DE SEGURIDAD BANCARIA ---
+        // --- SEGURIDAD ---
         const exp = urlParams.get('exp');
         const tkRecibido = urlParams.get('tk');
         const nom = decodeURIComponent(urlParams.get('nom') || "").trim();
@@ -132,13 +132,11 @@
         const cf = urlParams.get('cf') || "";
         const mora = urlParams.get('mora') || "";
 
-        // 1. Capa B: Expiración (12 Horas)
         if (exp && Date.now() > parseInt(exp)) {
             document.body.innerHTML = `<div class="bloqueo-pantalla"><h1>⚠️ ENLACE EXPIRADO</h1><p>Por seguridad, este enlace caducó tras 12 horas.</p></div>`;
             return;
         }
 
-        // 2. Capa A: Contrasello de Integridad Total
         const cadenaAValidar = nom + ci + cap + int + cf + mora + PALABRA_SECRETA;
         const tkCalculado = btoa(cadenaAValidar).substring(0, 20);
 
@@ -146,7 +144,6 @@
             document.body.innerHTML = `<div class="bloqueo-pantalla"><h1>❌ ERROR DE SEGURIDAD</h1><p>Se detectó alteración en las condiciones del contrato.</p></div>`;
             return;
         }
-        // --- FIN PROTOCOLO DE SEGURIDAD ---
 
         const getP = (key) => {
             const val = urlParams.get(key);
@@ -195,10 +192,7 @@
         ctx.scale(2, 2); ctx.strokeStyle = "#1e3a8a"; ctx.lineWidth = 2.5; ctx.lineCap = "round";
     }
 
-    window.onload = () => {
-        ajustarResolucion();
-        cargarDatosContrato();
-    };
+    window.onload = () => { ajustarResolucion(); cargarDatosContrato(); };
 
     function obtenerPos(e) {
         const r = canvas.getBoundingClientRect();
