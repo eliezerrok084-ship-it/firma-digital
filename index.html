@@ -122,29 +122,33 @@
     function cargarDatosContrato() {
         const urlParams = new URLSearchParams(window.location.search);
         
-        // --- SEGURIDAD ---
+        // --- EXTRACCIÓN PARA VALIDACIÓN ---
         const exp = urlParams.get('exp');
         const tkRecibido = urlParams.get('tk');
         const nom = decodeURIComponent(urlParams.get('nom') || "").trim();
-        const ci = decodeURIComponent(urlParams.get('ci') || "").trim();
-        const cap = urlParams.get('cap') || "";
-        const int = urlParams.get('int') || "";
-        const cf = urlParams.get('cf') || "";
-        const mora = urlParams.get('mora') || "";
+        const ci = (urlParams.get('ci') || "").trim();
+        const cap = (urlParams.get('cap') || "").trim();
+        const mon = decodeURIComponent(urlParams.get('mon') || "").trim();
+        const int = (urlParams.get('int') || "").trim();
+        const cf = (urlParams.get('cf') || "").trim();
+        const mora = (urlParams.get('mora') || "").trim();
 
+        // 1. Verificar Expiración
         if (exp && Date.now() > parseInt(exp)) {
             document.body.innerHTML = `<div class="bloqueo-pantalla"><h1>⚠️ ENLACE EXPIRADO</h1><p>Por seguridad, este enlace caducó tras 12 horas.</p></div>`;
             return;
         }
 
-        const cadenaAValidar = nom + ci + cap + int + cf + mora + PALABRA_SECRETA;
-        const tkCalculado = btoa(cadenaAValidar).substring(0, 20);
+        // 2. Verificar Sello de Integridad (Debe ser idéntico al generador)
+        const cadenaAValidar = (nom + ci + cap + mon + int + cf + mora + PALABRA_SECRETA).toUpperCase();
+        const tkCalculado = btoa(unescape(encodeURIComponent(cadenaAValidar))).substring(0, 25);
 
         if (tkRecibido !== tkCalculado) {
             document.body.innerHTML = `<div class="bloqueo-pantalla"><h1>❌ ERROR DE SEGURIDAD</h1><p>Se detectó alteración en las condiciones del contrato.</p></div>`;
             return;
         }
 
+        // 3. Si todo es correcto, cargar en pantalla
         const getP = (key) => {
             const val = urlParams.get(key);
             return (val && val !== "null" && val !== "") ? decodeURIComponent(val) : "---";
@@ -157,18 +161,16 @@
         document.getElementById('nom-display').innerText = nom;
         document.getElementById('ci-display').innerText = ci;
         document.getElementById('dir-display').innerText = getP('dir');
-        
-        document.getElementById('cap-display').innerText = (moneda !== "---") ? `${moneda} ${formatearMonto(cap)}` : formatearMonto(cap);
+        document.getElementById('cap-display').innerText = `${moneda} ${formatearMonto(cap)}`;
         document.getElementById('literal-display').innerText = getP('lit');
         document.getElementById('int-display').innerText = int;
         document.getElementById('plazo-display').innerText = nombresPlazo[modVal] || "Personalizado";
         document.getElementById('n-display').innerText = getP('n');
-        document.getElementById('cf-display').innerText = (moneda !== "---") ? `${moneda} ${formatearMonto(cf)}` : formatearMonto(cf);
-        
+        document.getElementById('cf-display').innerText = `${moneda} ${formatearMonto(cf)}`;
         document.getElementById('fdes-display').innerText = getP('fD');
         document.getElementById('f1-display').innerText = getP('f1');
         document.getElementById('metodo-display').innerText = getP('met');
-        document.getElementById('mora-display').innerText = (moneda !== "---") ? `${moneda} ${formatearMonto(mora)}` : formatearMonto(mora);
+        document.getElementById('mora-display').innerText = `${moneda} ${formatearMonto(mora)}`;
 
         document.getElementById('footer-nom').innerText = nom;
         document.getElementById('footer-ci').innerText = `C.I.: ${ci}`;
@@ -242,4 +244,3 @@
 </script>
 </body>
 </html>
-
