@@ -14,29 +14,22 @@
         .cuerpo { font-size: 13px; line-height: 1.5; text-align: justify; }
         .cuerpo p { margin: 8px 0; }
         .seccion-datos { background: #f8fafc; padding: 12px; border-left: 4px solid #1e293b; border-radius: 4px; margin: 15px 0; font-size: 12px; }
-        
         .contenedor-firmas { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 25px; gap: 15px; }
         .bloque-firma { flex: 1; text-align: center; }
         canvas { border: 1px dashed #cbd5e1; border-radius: 8px; background: #fff; touch-action: none; width: 100%; height: 160px; display: block; }
         .huella-box { width: 75px; height: 95px; border: 1px solid #cbd5e1; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #64748b; text-align: center; text-transform: uppercase; font-weight: bold; }
-        
         .firma-linea { border-top: 1.5px solid #000; width: 90%; margin: 10px auto 0; padding-top: 5px; text-align: center; font-weight: bold; font-size: 12px; text-transform: uppercase; }
-        
         .seccion-docs { margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; }
         .input-file-label { display: block; font-size: 11px; font-weight: bold; margin-bottom: 5px; color: #1e3a8a; text-transform: uppercase; }
         .grid-docs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
         .img-preview { width: 100%; border-radius: 6px; border: 1px solid #ddd; display: none; margin-top: 5px; max-height: 150px; object-fit: contain; }
-
         .modo-captura input[type="file"], .modo-captura .btn-clear { display: none !important; }
         .modo-captura canvas { border: none !important; }
-
         .btn-group { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 10px; padding-bottom: 40px; }
         button { border: none; padding: 16px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 14px; text-transform: uppercase; }
         .btn-clear { background: #f1f5f9; color: #64748b; margin-top: 10px; width: 100%; }
         .btn-pdf { background: #e11d48; color: white; }
         .btn-download { background: #10b981; color: white; }
-
-        /* Estilos para bloqueo de seguridad */
         .bloqueo-pantalla { text-align: center; padding: 50px 20px; background: #0f172a; color: white; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; font-family: sans-serif; }
         .bloqueo-pantalla h1 { color: #f43f5e; font-size: 28px; margin-bottom: 10px; }
     </style>
@@ -52,23 +45,16 @@
         
         <div class="cuerpo">
             <p>Conste por el presente documento privado, un contrato <b>"MUTUO CON INTERÉS"</b> bajo las siguientes cláusulas, términos y condiciones:</p>
-            
             <p><b>PRIMERA:</b> Yo <b id="nom-display">---</b>, con C.I./DNI: <b id="ci-display">---</b>, con domicilio en <span id="dir-display">---</span>, declaro recibir de <strong>ELVIN ELIEZER ROCA RIBEIRO</strong>, con C.I./DNI: <strong>8976926</strong>, la suma de: <b id="cap-display">---</b> (SON: <span id="literal-display">---</span>), en calidad de préstamo, y a mi entera satisfacción.</p>
-            
             <p><b>SEGUNDA:</b> El interés será del <b id="int-display">0</b><b>%</b>, pagadero de forma <b id="plazo-display">---</b>. Se devolverá en <b id="n-display">0</b> <b>cuotas</b> de <b id="cf-display">---</b>.</p>
-            
             <div class="seccion-datos">
                 • <b>Fecha de Desembolso:</b> <span id="fdes-display">---</span><br>
                 • <b>Método:</b> <span id="metodo-display">---</span> <br>
                 • <b>Fecha Primera Cuota:</b> <span id="f1-display">---</span>
             </div>
-
             <p><b>TERCERA:</b> En caso de incumplimiento, se aplicará un <strong>interés por mora diaria</strong> de <b id="mora-display">---</b>. Los intereses no pagados se capitalizarán.</p>
-            
             <p><b>CUARTA:</b> El DEUDOR garantiza el fiel cumplimiento de la obligación contraída con todos sus bienes muebles e inmuebles, habidos y por haber, presentes y futuros sin exclusión alguna.</p>
-            
             <p><b>QUINTA:</b> El incumplimiento en el pago de una sola cuota hará que la totalidad de la deuda se considere de plazo vencido, líquido y exigible. En tal caso el ACREEDOR queda facultado para exigir el <strong>PAGO TOTAL</strong> del capital adeudado, más los intereses generados y los gastos (administrativos y judiciales), el cual deberá ser cancelado por el DEUDOR en su integridad en un <strong>plazo máximo de 72 horas</strong> calendario a partir de la notificación o requerimiento.</p>
-            
             <p><b>SEXTA:</b> Declaro mi plena conformidad con todas las cláusulas, términos y condiciones establecidas.</p>
         </div>
 
@@ -111,7 +97,7 @@
 <script>
     const canvas = document.getElementById('canvas-firma');
     const ctx = canvas.getContext('2d');
-    const PALABRA_SECRETA = "ROCA2026"; // Llave para el Contrasello
+    const PALABRA_SECRETA = "ROCA2026"; 
     let dibujando = false;
 
     function formatearMonto(valor) {
@@ -120,7 +106,6 @@
         return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
-    // MECANISMO DE CIERRE: Limpia la pantalla después de la firma
     function finalizarProceso() {
         setTimeout(() => {
             document.body.innerHTML = `
@@ -140,19 +125,25 @@
         // --- INICIO PROTOCOLO DE SEGURIDAD BANCARIA ---
         const exp = urlParams.get('exp');
         const tkRecibido = urlParams.get('tk');
-        const nomRaw = urlParams.get('nom') || "";
-        const capRaw = urlParams.get('cap') || "";
+        const nom = decodeURIComponent(urlParams.get('nom') || "").trim();
+        const ci = decodeURIComponent(urlParams.get('ci') || "").trim();
+        const cap = urlParams.get('cap') || "";
+        const int = urlParams.get('int') || "";
+        const cf = urlParams.get('cf') || "";
+        const mora = urlParams.get('mora') || "";
 
-        // 1. Capa B: Expiración (24 Horas)
+        // 1. Capa B: Expiración (12 Horas)
         if (exp && Date.now() > parseInt(exp)) {
-            document.body.innerHTML = `<div class="bloqueo-pantalla"><h1>⚠️ ENLACE EXPIRADO</h1><p>Por seguridad, este enlace de firma caducó tras 12 horas.</p><p>Solicite uno nuevo a su asesor.</p></div>`;
+            document.body.innerHTML = `<div class="bloqueo-pantalla"><h1>⚠️ ENLACE EXPIRADO</h1><p>Por seguridad, este enlace caducó tras 12 horas.</p></div>`;
             return;
         }
 
-        // 2. Capa A: Contrasello (Integridad de datos)
-        const tkCalculado = btoa(decodeURIComponent(nomRaw).trim() + capRaw + PALABRA_SECRETA).substring(0, 10);
-        if (tkRecibido && tkRecibido !== tkCalculado) {
-            document.body.innerHTML = `<div class="bloqueo-pantalla"><h1>❌ ERROR DE INTEGRIDAD</h1><p>Se detectó que los datos del contrato han sido alterados.</p><p>Este incidente ha sido reportado.</p></div>`;
+        // 2. Capa A: Contrasello de Integridad Total
+        const cadenaAValidar = nom + ci + cap + int + cf + mora + PALABRA_SECRETA;
+        const tkCalculado = btoa(cadenaAValidar).substring(0, 20);
+
+        if (tkRecibido !== tkCalculado) {
+            document.body.innerHTML = `<div class="bloqueo-pantalla"><h1>❌ ERROR DE SEGURIDAD</h1><p>Se detectó alteración en las condiciones del contrato.</p></div>`;
             return;
         }
         // --- FIN PROTOCOLO DE SEGURIDAD ---
@@ -166,28 +157,24 @@
         const modVal = parseInt(getP('mod')) || 30;
         const nombresPlazo = { 30: "Mensual", 15: "Quincenal", 7: "Semanal", 1: "Diario" };
 
-        document.getElementById('nom-display').innerText = getP('nom');
-        document.getElementById('ci-display').innerText = getP('ci');
+        document.getElementById('nom-display').innerText = nom;
+        document.getElementById('ci-display').innerText = ci;
         document.getElementById('dir-display').innerText = getP('dir');
         
-        const capFinal = formatearMonto(getP('cap'));
-        const cuotaFinal = formatearMonto(getP('cf'));
-        const moraFinal = formatearMonto(getP('mora'));
-
-        document.getElementById('cap-display').innerText = (moneda !== "---") ? `${moneda} ${capFinal}` : capFinal;
+        document.getElementById('cap-display').innerText = (moneda !== "---") ? `${moneda} ${formatearMonto(cap)}` : formatearMonto(cap);
         document.getElementById('literal-display').innerText = getP('lit');
-        document.getElementById('int-display').innerText = getP('int');
+        document.getElementById('int-display').innerText = int;
         document.getElementById('plazo-display').innerText = nombresPlazo[modVal] || "Personalizado";
         document.getElementById('n-display').innerText = getP('n');
-        document.getElementById('cf-display').innerText = (moneda !== "---") ? `${moneda} ${cuotaFinal}` : cuotaFinal;
+        document.getElementById('cf-display').innerText = (moneda !== "---") ? `${moneda} ${formatearMonto(cf)}` : formatearMonto(cf);
         
         document.getElementById('fdes-display').innerText = getP('fD');
         document.getElementById('f1-display').innerText = getP('f1');
         document.getElementById('metodo-display').innerText = getP('met');
-        document.getElementById('mora-display').innerText = (moneda !== "---") ? `${moneda} ${moraFinal}` : moraFinal;
+        document.getElementById('mora-display').innerText = (moneda !== "---") ? `${moneda} ${formatearMonto(mora)}` : formatearMonto(mora);
 
-        document.getElementById('footer-nom').innerText = getP('nom');
-        document.getElementById('footer-ci').innerText = `C.I.: ${getP('ci')}`;
+        document.getElementById('footer-nom').innerText = nom;
+        document.getElementById('footer-ci').innerText = `C.I.: ${ci}`;
     }
 
     function previsualizar(input, idImg) {
@@ -204,12 +191,8 @@
 
     function ajustarResolucion() {
         const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width * 2; 
-        canvas.height = rect.height * 2;
-        ctx.scale(2, 2); 
-        ctx.strokeStyle = "#1e3a8a"; 
-        ctx.lineWidth = 2.5; 
-        ctx.lineCap = "round";
+        canvas.width = rect.width * 2; canvas.height = rect.height * 2;
+        ctx.scale(2, 2); ctx.strokeStyle = "#1e3a8a"; ctx.lineWidth = 2.5; ctx.lineCap = "round";
     }
 
     window.onload = () => {
@@ -241,7 +224,7 @@
             link.href = canvasRes.toDataURL("image/png");
             link.click();
             tarjeta.classList.remove('modo-captura');
-            finalizarProceso(); // Auto-cierre
+            finalizarProceso();
         });
     }
 
@@ -259,9 +242,10 @@
             pdf.addImage(imgData, 'PNG', 10, 10, imgWidthInMm, pageHeightInMm);
             pdf.save(`CONTRATO_ROCA_${nom.replace(/\s+/g, '_')}.pdf`);
             tarjeta.classList.remove('modo-captura');
-            finalizarProceso(); // Auto-cierre
+            finalizarProceso();
         });
     }
 </script>
 </body>
 </html>
+
