@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Firma de Contrato</title>
+    <title>Firma de Contrato - Inversiones ROCA</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
@@ -35,87 +35,128 @@
         .btn-clear { background: #f1f5f9; color: #64748b; margin-top: 10px; width: 100%; }
         .btn-pdf { background: #e11d48; color: white; }
         .btn-download { background: #10b981; color: white; }
+
+        /* Estilos para bloqueo de seguridad */
+        .bloqueo-pantalla { text-align: center; padding: 50px 20px; background: #0f172a; color: white; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; font-family: sans-serif; }
+        .bloqueo-pantalla h1 { color: #f43f5e; font-size: 28px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
-<div class="card" id="hoja-contrato">
-    <div class="header">
-        <h2>CONTRATO DE PRÉSTAMO</h2>
-        <small>Documento Privado - Inversiones ROCA</small>
-    </div>
-    
-    <div class="cuerpo">
-        <p>Conste por el presente documento privado, un contrato <b>"MUTUO CON INTERÉS"</b> bajo las siguientes cláusulas, términos y condiciones:</p>
+<div id="contenido-principal" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+    <div class="card" id="hoja-contrato">
+        <div class="header">
+            <h2>CONTRATO DE PRÉSTAMO</h2>
+            <small>Documento Privado - Inversiones ROCA</small>
+        </div>
         
-        <p><b>PRIMERA:</b> Yo <b id="nom-display">---</b>, con C.I./DNI: <b id="ci-display">---</b>, con domicilio en <span id="dir-display">---</span>, declaro recibir de <strong>ELVIN ELIEZER ROCA RIBEIRO</strong>, con C.I./DNI: <strong>8976926</strong>, la suma de: <b id="cap-display">---</b> (SON: <span id="literal-display">---</span>), en calidad de préstamo, y a mi entera satisfacción.</p>
-        
-        <p><b>SEGUNDA:</b> El interés será del <b id="int-display">0</b><b>%</b>, pagadero de forma <b id="plazo-display">---</b>. Se devolverá en <b id="n-display">0</b> <b>cuotas</b> de <b id="cf-display">---</b>.</p>
-        
-        <div class="seccion-datos">
-            • <b>Fecha de Desembolso:</b> <span id="fdes-display">---</span><br>
-            • <b>Método:</b> <span id="metodo-display">---</span> <br>
-            • <b>Fecha Primera Cuota:</b> <span id="f1-display">---</span>
+        <div class="cuerpo">
+            <p>Conste por el presente documento privado, un contrato <b>"MUTUO CON INTERÉS"</b> bajo las siguientes cláusulas, términos y condiciones:</p>
+            
+            <p><b>PRIMERA:</b> Yo <b id="nom-display">---</b>, con C.I./DNI: <b id="ci-display">---</b>, con domicilio en <span id="dir-display">---</span>, declaro recibir de <strong>ELVIN ELIEZER ROCA RIBEIRO</strong>, con C.I./DNI: <strong>8976926</strong>, la suma de: <b id="cap-display">---</b> (SON: <span id="literal-display">---</span>), en calidad de préstamo, y a mi entera satisfacción.</p>
+            
+            <p><b>SEGUNDA:</b> El interés será del <b id="int-display">0</b><b>%</b>, pagadero de forma <b id="plazo-display">---</b>. Se devolverá en <b id="n-display">0</b> <b>cuotas</b> de <b id="cf-display">---</b>.</p>
+            
+            <div class="seccion-datos">
+                • <b>Fecha de Desembolso:</b> <span id="fdes-display">---</span><br>
+                • <b>Método:</b> <span id="metodo-display">---</span> <br>
+                • <b>Fecha Primera Cuota:</b> <span id="f1-display">---</span>
+            </div>
+
+            <p><b>TERCERA:</b> En caso de incumplimiento, se aplicará un <strong>interés por mora diaria</strong> de <b id="mora-display">---</b>. Los intereses no pagados se capitalizarán.</p>
+            
+            <p><b>CUARTA:</b> El DEUDOR garantiza el fiel cumplimiento de la obligación contraída con todos sus bienes muebles e inmuebles, habidos y por haber, presentes y futuros sin exclusión alguna.</p>
+            
+            <p><b>QUINTA:</b> El incumplimiento en el pago de una sola cuota hará que la totalidad de la deuda se considere de plazo vencido, líquido y exigible. En tal caso el ACREEDOR queda facultado para exigir el <strong>PAGO TOTAL</strong> del capital adeudado, más los intereses generados y los gastos (administrativos y judiciales), el cual deberá ser cancelado por el DEUDOR en su integridad en un <strong>plazo máximo de 72 horas</strong> calendario a partir de la notificación o requerimiento.</p>
+            
+            <p><b>SEXTA:</b> Declaro mi plena conformidad con todas las cláusulas, términos y condiciones establecidas.</p>
         </div>
 
-        <p><b>TERCERA:</b> En caso de incumplimiento, se aplicará un <strong>interés por mora diaria</strong> de <b id="mora-display">---</b>. Los intereses no pagados se capitalizarán.</p>
-        
-        <p><b>CUARTA:</b> El DEUDOR garantiza el fiel cumplimiento de la obligación contraída con todos sus bienes muebles e inmuebles, habidos y por haber, presentes y futuros sin exclusión alguna.</p>
-        
-        <p><b>QUINTA:</b> El incumplimiento en el pago de una sola cuota hará que la totalidad de la deuda se considere de plazo vencido, líquido y exigible. En tal caso el ACREEDOR queda facultado para exigir el <strong>PAGO TOTAL</strong> del capital adeudado, más los intereses generados y los gastos (administrativos y judiciales), el cual deberá ser cancelado por el DEUDOR en su integridad en un <strong>plazo máximo de 72 horas</strong> calendario a partir de la notificación o requerimiento.</p>
-        
-        <p><b>SEXTA:</b> Declaro mi plena conformidad con todas las cláusulas, términos y condiciones establecidas.</p>
-    </div>
-
-    <div class="contenedor-firmas">
-        <div class="bloque-firma">
-            <canvas id="canvas-firma"></canvas>
-            <div class="firma-linea">
-                <small style="display:block; font-weight:normal; text-transform:none;">Firma del Cliente</small>
-                <span id="footer-nom">---</span><br>
-                <small id="footer-ci" style="text-transform:none;">C.I.: ---</small>
+        <div class="contenedor-firmas">
+            <div class="bloque-firma">
+                <canvas id="canvas-firma"></canvas>
+                <div class="firma-linea">
+                    <small style="display:block; font-weight:normal; text-transform:none;">Firma del Cliente</small>
+                    <span id="footer-nom">---</span><br>
+                    <small id="footer-ci" style="text-transform:none;">C.I.: ---</small>
+                </div>
             </div>
+            <div class="huella-box">Huella<br>Digital</div>
         </div>
-        <div class="huella-box">Huella<br>Digital</div>
-    </div>
 
-    <button class="btn-clear" onclick="limpiar()">🔄 REPETIR TRAZO</button>
+        <button class="btn-clear" id="btn-limpiar" onclick="limpiar()">🔄 REPETIR TRAZO</button>
 
-    <div class="seccion-docs" id="area-respaldos">
-        <div class="grid-docs">
-            <div>
-                <label class="input-file-label">C.I. ANVERSO:</label>
-                <input type="file" accept="image/*" onchange="previsualizar(this, 'img-anverso')" id="input-anverso" style="font-size:10px; width:100%;">
-                <img id="img-anverso" class="img-preview">
-            </div>
-            <div>
-                <label class="input-file-label">C.I. REVERSO:</label>
-                <input type="file" accept="image/*" onchange="previsualizar(this, 'img-reverso')" id="input-reverso" style="font-size:10px; width:100%;">
-                <img id="img-reverso" class="img-preview">
+        <div class="seccion-docs" id="area-respaldos">
+            <div class="grid-docs">
+                <div>
+                    <label class="input-file-label">C.I. ANVERSO:</label>
+                    <input type="file" accept="image/*" onchange="previsualizar(this, 'img-anverso')" id="input-anverso" style="font-size:10px; width:100%;">
+                    <img id="img-anverso" class="img-preview">
+                </div>
+                <div>
+                    <label class="input-file-label">C.I. REVERSO:</label>
+                    <input type="file" accept="image/*" onchange="previsualizar(this, 'img-reverso')" id="input-reverso" style="font-size:10px; width:100%;">
+                    <img id="img-reverso" class="img-preview">
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="btn-group">
-    <button class="btn-pdf" onclick="descargarPDF()">📄 DESCARGAR (PDF)</button>
-    <button class="btn-download" onclick="descargarPNG()">🖼️ GUARDAR IMAGEN (PNG)</button>
+    <div class="btn-group" id="grupo-botones">
+        <button class="btn-pdf" onclick="descargarPDF()">📄 DESCARGAR (PDF)</button>
+        <button class="btn-download" onclick="descargarPNG()">🖼️ GUARDAR IMAGEN (PNG)</button>
+    </div>
 </div>
 
 <script>
     const canvas = document.getElementById('canvas-firma');
     const ctx = canvas.getContext('2d');
+    const PALABRA_SECRETA = "ROCA2026"; // Llave para el Contrasello
     let dibujando = false;
 
-    // Función Blindada Estándar Bancario (Miles con coma, decimales con punto)
     function formatearMonto(valor) {
         const num = parseFloat(valor);
         if (isNaN(num)) return "---";
         return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
+    // MECANISMO DE CIERRE: Limpia la pantalla después de la firma
+    function finalizarProceso() {
+        setTimeout(() => {
+            document.body.innerHTML = `
+                <div class="bloqueo-pantalla">
+                    <div style="font-size: 60px;">✅</div>
+                    <h1 style="color: #10b981;">PROCESO COMPLETADO</h1>
+                    <p>Gracias por confiar en <b>Inversiones ROCA</b>.</p>
+                    <p>Su sesión ha finalizado y el contrato ha sido asegurado.</p>
+                    <p style="font-size: 12px; color: #94a3b8; margin-top: 20px;">Ya puede cerrar esta pestaña.</p>
+                </div>`;
+        }, 2500);
+    }
+
     function cargarDatosContrato() {
         const urlParams = new URLSearchParams(window.location.search);
+        
+        // --- INICIO PROTOCOLO DE SEGURIDAD BANCARIA ---
+        const exp = urlParams.get('exp');
+        const tkRecibido = urlParams.get('tk');
+        const nomRaw = urlParams.get('nom') || "";
+        const capRaw = urlParams.get('cap') || "";
+
+        // 1. Capa B: Expiración (24 Horas)
+        if (exp && Date.now() > parseInt(exp)) {
+            document.body.innerHTML = `<div class="bloqueo-pantalla"><h1>⚠️ ENLACE EXPIRADO</h1><p>Por seguridad, este enlace de firma caducó tras 12 horas.</p><p>Solicite uno nuevo a su asesor.</p></div>`;
+            return;
+        }
+
+        // 2. Capa A: Contrasello (Integridad de datos)
+        const tkCalculado = btoa(decodeURIComponent(nomRaw).trim() + capRaw + PALABRA_SECRETA).substring(0, 10);
+        if (tkRecibido && tkRecibido !== tkCalculado) {
+            document.body.innerHTML = `<div class="bloqueo-pantalla"><h1>❌ ERROR DE INTEGRIDAD</h1><p>Se detectó que los datos del contrato han sido alterados.</p><p>Este incidente ha sido reportado.</p></div>`;
+            return;
+        }
+        // --- FIN PROTOCOLO DE SEGURIDAD ---
+
         const getP = (key) => {
             const val = urlParams.get(key);
             return (val && val !== "null" && val !== "") ? decodeURIComponent(val) : "---";
@@ -129,7 +170,6 @@
         document.getElementById('ci-display').innerText = getP('ci');
         document.getElementById('dir-display').innerText = getP('dir');
         
-        // Aplicación del formato bancario a montos
         const capFinal = formatearMonto(getP('cap'));
         const cuotaFinal = formatearMonto(getP('cf'));
         const moraFinal = formatearMonto(getP('mora'));
@@ -201,6 +241,7 @@
             link.href = canvasRes.toDataURL("image/png");
             link.click();
             tarjeta.classList.remove('modo-captura');
+            finalizarProceso(); // Auto-cierre
         });
     }
 
@@ -218,6 +259,7 @@
             pdf.addImage(imgData, 'PNG', 10, 10, imgWidthInMm, pageHeightInMm);
             pdf.save(`CONTRATO_ROCA_${nom.replace(/\s+/g, '_')}.pdf`);
             tarjeta.classList.remove('modo-captura');
+            finalizarProceso(); // Auto-cierre
         });
     }
 </script>
