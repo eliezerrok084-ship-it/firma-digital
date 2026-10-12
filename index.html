@@ -29,7 +29,7 @@
         button { border: none; padding: 16px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 14px; text-transform: uppercase; }
         .btn-clear { background: #f1f5f9; color: #64748b; margin-top: 10px; width: 100%; }
         .btn-pdf { background: #e11d48; color: white; }
-        .btn-download { background: #10b981; color: white; }
+        .btn-whatsapp { background: #25D366; color: white; }
         .bloqueo-pantalla { text-align: center; padding: 50px 20px; background: #0f172a; color: white; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; font-family: sans-serif; }
         .bloqueo-pantalla h1 { color: #f43f5e; font-size: 28px; margin-bottom: 10px; }
     </style>
@@ -67,7 +67,6 @@
                     <small id="footer-ci" style="text-transform:none;">C.I.: ---</small>
                 </div>
             </div>
-            
         </div>
 
         <button class="btn-clear" id="btn-limpiar" onclick="limpiar()">🔄 REPETIR FIRMA</button>
@@ -90,7 +89,7 @@
 
     <div class="btn-group" id="grupo-botones">
         <button class="btn-pdf" onclick="descargarPDF()">📄 DESCARGAR (PDF)</button>
-        <button class="btn-download" onclick="descargarPNG()">🖼️ GUARDAR IMAGEN (PNG)</button>
+        <button class="btn-whatsapp" onclick="enviarWhatsApp()">💬 ENVIAR A WHATSAPP</button>
     </div>
 </div>
 
@@ -112,7 +111,6 @@
                 <div class="bloqueo-pantalla">
                     <div style="font-size: 60px;">✅</div>
                     <h1 style="color: #10b981;">PROCESO COMPLETADO</h1>
-                    
                     <p>Su sesión ha finalizado.</p>
                     <p style="font-size: 12px; color: #94a3b8; margin-top: 20px;">Ya puede cerrar esta pestaña.</p>
                 </div>`;
@@ -122,7 +120,6 @@
     function cargarDatosContrato() {
         const urlParams = new URLSearchParams(window.location.search);
         
-        // --- EXTRACCIÓN PARA VALIDACIÓN ---
         const exp = urlParams.get('exp');
         const tkRecibido = urlParams.get('tk');
         const nom = decodeURIComponent(urlParams.get('nom') || "").trim();
@@ -139,7 +136,7 @@
             return;
         }
 
-        // 2. Verificar Sello de Integridad (Debe ser idéntico al generador)
+        // 2. Verificar Sello de Integridad
         const cadenaAValidar = (nom + ci + cap + mon + int + cf + mora + PALABRA_SECRETA).toUpperCase();
         const tkCalculado = btoa(unescape(encodeURIComponent(cadenaAValidar))).substring(0, 25);
 
@@ -148,7 +145,7 @@
             return;
         }
 
-        // 3. Si todo es correcto, cargar en pantalla
+        // 3. Cargar en pantalla
         const getP = (key) => {
             const val = urlParams.get(key);
             return (val && val !== "null" && val !== "") ? decodeURIComponent(val) : "---";
@@ -211,16 +208,45 @@
 
     function limpiar() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
-    function descargarPNG() {
+    async function enviarWhatsApp() {
         const tarjeta = document.getElementById('hoja-contrato');
+        const nom = document.getElementById('nom-display').innerText;
         tarjeta.classList.add('modo-captura');
-        html2canvas(tarjeta, { scale: 3, useCORS: true }).then(canvasRes => {
-            const link = document.createElement('a');
-            link.download = `Contrato_${document.getElementById('nom-display').innerText}.png`;
-            link.href = canvasRes.toDataURL("image/png");
-            link.click();
+
+        html2canvas(tarjeta, { scale: 3, useCORS: true }).then(async canvasRes => {
             tarjeta.classList.remove('modo-captura');
-            finalizarProceso();
+
+            canvasRes.toBlob(async (blob) => {
+                const archivo = new File([blob], `Contrato_${nom.replace(/\s+/g, '_')}.png`, { type: 'image/png' });
+
+                // 1. Intentar usar Web Share API (ideal para celulares: comparte la imagen directo a WhatsApp)
+                if (navigator.canShare && navigator.canShare({ files: [archivo] })) {
+                    try {
+                        await navigator.share({
+                            title: 'Contrato de Préstamo',
+                            text: `Hola, adjunto el contrato firmado de ${nom}.`,
+                            files: [archivo]
+                        });
+                        finalizarProceso();
+                        return;
+                    } catch (error) {
+                        if (error.name !== 'AbortError') {
+                            console.error('Error al compartir:', error);
+                        }
+                    }
+                }
+
+                // 2. Si no es compatible con archivos directos, descarga la imagen y abre el chat del número +56994954980
+                const link = document.createElement('a');
+                link.download = `Contrato_${nom.replace(/\s+/g, '_')}.png`;
+                link.href = canvasRes.toDataURL("image/png");
+                link.click();
+
+                const textoMensaje = encodeURIComponent(`Hola, aquí te envío el contrato firmado de ${nom}.`);
+                window.open(`https://wa.me/56994954980?text=${textoMensaje}`, '_blank');
+                
+                finalizarProceso();
+            }, 'image/png');
         });
     }
 
@@ -244,5 +270,3 @@
 </script>
 </body>
 </html>
-
-
