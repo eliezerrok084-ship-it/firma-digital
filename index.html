@@ -2,14 +2,14 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contrato de Préstamo - Inversiones ROCA</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * { box-sizing: border-box; }
         body { 
             font-family: 'Times New Roman', Times, serif, Arial, sans-serif; 
-            background: #e2e8f0; 
+            background: #cbd5e1; 
             color: #000000; 
             display: flex; 
             justify-content: center; 
@@ -19,7 +19,7 @@
             padding: 15px; 
         }
         .sheet { 
-            background: #ffffff; 
+            background: #ffffff !important; 
             color: #000000; 
             width: 100%; 
             max-width: 650px; 
@@ -27,7 +27,7 @@
             padding: 40px 30px; 
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); 
             text-align: left; 
-            border: 1px solid #cbd5e1;
+            border: 1px solid #94a3b8;
         }
         h2 { 
             margin: 0 0 25px 0; 
@@ -36,6 +36,7 @@
             font-weight: bold;
             text-align: center;
             letter-spacing: 1px;
+            font-family: Arial, sans-serif;
         }
         .contrato-texto {
             font-size: 13.5px;
@@ -88,26 +89,24 @@
             color: #475569;
             font-weight: bold;
             font-family: Arial, sans-serif;
+            min-height: 90px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
         .ci-upload-box input { display: none; }
         .ci-preview {
             width: 100%;
-            height: 60px;
-            object-fit: cover;
+            height: 70px;
+            object-fit: contain;
             border-radius: 3px;
             margin-top: 5px;
             display: none;
         }
 
         .firma-contenedor {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-top: 30px;
-            gap: 20px;
-        }
-        .firma-area {
-            flex-grow: 1;
+            margin-top: 25px;
             text-align: center;
         }
         .instruccion { 
@@ -123,30 +122,13 @@
             background: #ffffff; 
             touch-action: none; 
             width: 100%; 
-            height: 120px; 
+            height: 130px; 
             display: block; 
             cursor: crosshair; 
         }
-        .huella-box {
-            width: 90px;
-            height: 110px;
-            border: 1px solid #334155;
-            border-radius: 4px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            align-items: center;
-            padding-bottom: 5px;
-            font-size: 10px;
-            font-weight: bold;
-            font-family: Arial, sans-serif;
-            color: #334155;
-            background: #ffffff;
-            flex-shrink: 0;
-        }
         .linea-firma {
             border-top: 1px solid #000000;
-            margin-top: 40px;
+            margin-top: 35px;
             padding-top: 5px;
             text-align: center;
             font-size: 13px;
@@ -182,7 +164,7 @@
 <body>
 
 <div class="sheet" id="area-captura">
-    <h2>CONTRATO DE PRÉSTamo</h2>
+    <h2>CONTRATO DE PRÉSTAMO</h2>
     
     <div class="contrato-texto">
         <p>Conste por el presente documento privado, un contrato <strong>"MUTUO CON INTERÉS"</strong> bajo las siguientes cláusulas, términos y condiciones:</p>
@@ -209,27 +191,22 @@
     <div class="ci-section" id="seccion-ci">
         <div class="ci-title">FOTOGRAFÍA DE CÉDULA DE IDENTIDAD</div>
         <div class="ci-grid">
-            <label class="ci-upload-box">
+            <label class="ci-upload-box" id="box-anverso">
                 📁 C.I. Anverso
-                <input type="file" id="file-anverso" accept="image/*" onchange="mostrarPreview(this, 'prev-anverso')">
+                <input type="file" id="file-anverso" accept="image/*" onchange="mostrarPreview(this, 'prev-anverso', 'box-anverso')">
                 <img id="prev-anverso" class="ci-preview">
             </label>
-            <label class="ci-upload-box">
+            <label class="ci-upload-box" id="box-reverso">
                 📁 C.I. Reverso
-                <input type="file" id="file-reverso" accept="image/*" onchange="mostrarPreview(this, 'prev-reverso')">
+                <input type="file" id="file-reverso" accept="image/*" onchange="mostrarPreview(this, 'prev-reverso', 'box-reverso')">
                 <img id="prev-reverso" class="ci-preview">
             </label>
         </div>
     </div>
 
     <div class="firma-contenedor">
-        <div class="firma-area">
-            <p class="instruccion">Firme aquí con su dedo</p>
-            <canvas id="canvas-firma"></canvas>
-        </div>
-        <div class="huella-box">
-            HUELLA
-        </div>
+        <p class="instruccion">Firme aquí con su dedo</p>
+        <canvas id="canvas-firma"></canvas>
     </div>
 
     <div class="linea-firma">
@@ -262,22 +239,22 @@
 
     // Lectura exacta y dinámica de parámetros de la URL
     const urlParams = new URLSearchParams(window.location.search);
-    const nombre = urlParams.get('nom') || "ELVIN ROLY ROCA";
+    const nombre = urlParams.get('nom') || urlParams.get('nombre') || "ELVIN ROLY ROCA";
     const ci = urlParams.get('ci') || "8976926";
-    const dir = urlParams.get('dir') || "ANTOFAGASTA - CHILE";
-    const ec = urlParams.get('ec') || "SOLTERO";
-    const moneda = urlParams.get('mon') || "$";
-    const capital = urlParams.get('cap') || "5,000.00";
+    const dir = urlParams.get('dir') || urlParams.get('domicilio') || "ANTOFAGASTA - CHILE";
+    const ec = urlParams.get('ec') || urlParams.get('estadocivil') || "SOLTERO";
+    const moneda = urlParams.get('mon') || urlParams.get('moneda') || "$";
+    const capital = urlParams.get('cap') || urlParams.get('monto') || "5,000.00";
     const literal = urlParams.get('lit') || "CINCO MIL CON 00/100 PESOS CHILENOS";
     const interes = urlParams.get('int') || "10";
-    const modCuotas = urlParams.get('mod') || "4";
-    const cuotaVal = urlParams.get('cf') || "1,577.35";
-    const desembolso = urlParams.get('fD') || "2026-10-27";
-    const metodo = urlParams.get('met') || "TRANSFERENCIA";
-    const fecha1ra = urlParams.get('f1') || "2026-11-27";
+    const modCuotas = urlParams.get('mod') || urlParams.get('cuo') || urlParams.get('ncu') || "4";
+    const cuotaVal = urlParams.get('cf') || urlParams.get('cuotavalor') || "1,577.35";
+    const desembolso = urlParams.get('fD') || urlParams.get('fechadesembolso') || "2026-10-27";
+    const metodo = urlParams.get('met') || urlParams.get('metodo') || "TRANSFERENCIA";
+    const fecha1ra = urlParams.get('f1') || urlParams.get('fechacuota') || "2026-11-27";
     const mora = urlParams.get('mora') || "50.00";
 
-    // Inyectar datos reales al documento
+    // Inyectar datos reales
     document.getElementById('txt-nombre').innerText = nombre;
     document.getElementById('txt-ci').innerText = ci;
     document.getElementById('txt-dir').innerText = dir;
@@ -299,13 +276,15 @@
 
     window.onload = ajustarResolucion;
 
-    function mostrarPreview(input, imgId) {
+    function mostrarPreview(input, imgId, boxId) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = document.getElementById(imgId);
                 img.src = e.target.result;
                 img.style.display = 'block';
+                const box = document.getElementById(boxId);
+                box.style.border = "1px solid #94a3b8";
             }
             reader.readAsDataURL(input.files[0]);
         }
@@ -350,33 +329,30 @@
             return alert("Por favor, realice su firma antes de enviar.");
         }
 
-        // Ocultar botones y selector de archivos para que la foto salga limpia como documento formal
         const botones = document.getElementById('controles-botones');
-        const seccionCi = document.getElementById('seccion-ci');
         botones.style.display = 'none';
-        seccionCi.style.display = 'none';
 
-        html2canvas(document.getElementById('area-captura'), { scale: 2, useCORS: true }).then(canvasCaptura => {
+        html2canvas(document.getElementById('area-captura'), { 
+            scale: 2, 
+            useCORS: true, 
+            backgroundColor: '#ffffff' 
+        }).then(canvasCaptura => {
             botones.style.display = 'grid';
-            seccionCi.style.display = 'block';
             
-            // Descargar la imagen del contrato firmado en el dispositivo
             const enlace = document.createElement('a');
             enlace.download = `Contrato_${nombre}_${ci}.png`;
-            enlace.href = canvasCaptura.toDataURL("image/png", 0.9);
+            enlace.href = canvasCaptura.toDataURL("image/png", 0.95);
             enlace.click();
 
-            // Abrir WhatsApp con un aviso limpio y profesional
             const tuTelefono = "56994954980"; 
             const mensaje = `*INVERSIONES ROCA - CONTRATO Y FIRMA*%0A` +
                              `*Cliente:* ${nombre}%0A` +
                              `*CI:* ${ci}%0A` +
-                             `¡El contrato formal firmado se ha generado y descargado correctamente!`;
+                             `¡El contrato formal firmado con carnet y firma se ha generado y descargado correctamente en mi equipo!`;
 
             window.location.href = `https://wa.me/${tuTelefono}?text=${encodeURIComponent(mensaje)}`;
         }).catch(err => {
             botones.style.display = 'grid';
-            seccionCi.style.display = 'block';
             alert("Error al procesar la imagen del contrato.");
         });
     }
