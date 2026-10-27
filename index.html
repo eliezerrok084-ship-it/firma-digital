@@ -3,237 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Firma de Contrato</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <title>Firma Digital - Inversiones ROCA</title>
     <style>
-        body { font-family: 'Inter', sans-serif; background: #0f172a; color: #1e293b; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 10px; box-sizing: border-box; }
-        .card { background: #ffffff; width: 100%; max-width: 480px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border-radius: 4px; margin-bottom: 20px; box-sizing: border-box; }
-        .header { text-align: center; border-bottom: 1.5px solid #1e293b; padding-bottom: 10px; margin-bottom: 15px; }
-        .header h2 { margin: 0; font-size: 20px; font-weight: 800; text-transform: uppercase; }
-        .cuerpo { font-size: 13px; line-height: 1.5; text-align: justify; }
-        .cuerpo p { margin: 8px 0; }
-        .seccion-datos { background: #f8fafc; padding: 12px; border-left: 4px solid #1e293b; border-radius: 4px; margin: 15px 0; font-size: 12px; }
-        .contenedor-firmas { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 25px; gap: 15px; }
-        .bloque-firma { flex: 1; text-align: center; }
-        canvas { border: 1px dashed #cbd5e1; border-radius: 8px; background: #fff; touch-action: none; width: 100%; height: 160px; display: block; }
-        .firma-linea { border-top: 1.5px solid #000; width: 90%; margin: 10px auto 0; padding-top: 5px; text-align: center; font-weight: bold; font-size: 12px; text-transform: uppercase; }
-        .seccion-docs { margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; }
-        .input-file-label { display: block; font-size: 11px; font-weight: bold; margin-bottom: 5px; color: #1e3a8a; text-transform: uppercase; }
-        .grid-docs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-        .img-preview { width: 100%; border-radius: 6px; border: 1px solid #ddd; display: none; margin-top: 5px; max-height: 150px; object-fit: contain; }
-        .modo-captura input[type="file"], .modo-captura .btn-clear { display: none !important; }
-        .modo-captura canvas { border: none !important; }
-        .btn-group { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 10px; padding-bottom: 40px; }
-        button { border: none; padding: 16px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 14px; text-transform: uppercase; }
-        .btn-clear { background: #f1f5f9; color: #64748b; margin-top: 10px; width: 100%; }
-        .btn-pdf { background: #e11d48; color: white; }
-        .btn-whatsapp { background: #25D366; color: white; }
-        .bloqueo-pantalla { text-align: center; padding: 50px 20px; background: #0f172a; color: white; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; font-family: sans-serif; }
-        .bloqueo-pantalla h1 { color: #f43f5e; font-size: 28px; margin-bottom: 10px; }
-        
-        /* Estilos del Spinner de Carga */
-        #overlay-carga {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.85);
-            z-index: 9999;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-family: sans-serif;
-        }
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #25D366;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin-bottom: 15px;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        body { font-family: 'Inter', sans-serif; background: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; padding: 10px; box-sizing: border-box; }
+        .card { background: #ffffff; color: #1e293b; width: 100%; max-width: 420px; border-radius: 16px; padding: 25px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); text-align: center; }
+        h2 { margin: 0 0 5px 0; color: #1e3a8a; font-size: 22px; letter-spacing: -0.5px; }
+        .cliente-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 10px; margin-bottom: 20px; font-weight: 600; color: #334155; font-size: 14px; }
+        canvas { border: 2px dashed #cbd5e1; border-radius: 12px; background: #fff; touch-action: none; width: 100%; height: 280px; display: block; cursor: crosshair; }
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+        button { border: none; padding: 16px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 14px; transition: all 0.2s; }
+        .btn-clear { background: #f1f5f9; color: #64748b; }
+        .btn-send { background: #1e3a8a; color: white; box-shadow: 0 4px 6px -1px rgba(30, 58, 138, 0.3); }
+        .btn-send:active { transform: scale(0.96); }
+        .instruccion { font-size: 12px; color: #94a3b8; margin-bottom: 10px; font-style: italic; }
     </style>
 </head>
 <body>
 
-<!-- Pantalla de carga flotante -->
-<div id="overlay-carga">
-    <div class="spinner"></div>
-    <p id="texto-carga" style="font-weight: bold; font-size: 15px; letter-spacing: 0.5px;">Generando documento...</p>
-</div>
+<div class="card">
+    <h2>INVERSIONES ROCA</h2>
+    <div class="cliente-box" id="info-cliente">Cargando datos del cliente...</div>
+    
+    <p class="instruccion">Firme aquí con su dedo (Trazo Azul Marino)</p>
+    <canvas id="canvas-firma"></canvas>
 
-<div id="contenido-principal" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-    <div class="card" id="hoja-contrato">
-        <div class="header">
-            <h2>CONTRATO DE PRÉSTAMO</h2>
-            <small>Documento Privado</small>
-        </div>
-        
-        <div class="cuerpo">
-            <p>Conste por el presente documento privado, un contrato <b>"MUTUO CON INTERÉS"</b> bajo las siguientes cláusulas, términos y condiciones:</p>
-            <p><b>PRIMERA:</b> Yo <b id="nom-display">---</b>, con C.I./DNI: <b id="ci-display">---</b>, con domicilio en <span id="dir-display">---</span>, declaro recibir de <strong>ELVIN ELIEZER ROCA RIBEIRO</strong>, con C.I./DNI: <strong>8976926</strong>, la suma de: <b id="cap-display">---</b> (SON: <span id="literal-display">---</span>), en calidad de préstamo, y a mi entera satisfacción.</p>
-            <p><b>SEGUNDA:</b> El interés será del <b id="int-display">0</b><b>%</b>, pagadero de forma <b id="plazo-display">---</b>. Se devolverá en <b id="n-display">0</b> <b>cuotas</b> de <b id="cf-display">---</b>.</p>
-            <div class="seccion-datos">
-                • <b>Fecha de Desembolso:</b> <span id="fdes-display">---</span><br>
-                • <b>Método:</b> <span id="metodo-display">---</span> <br>
-                • <b>Fecha Primera Cuota:</b> <span id="f1-display">---</span>
-            </div>
-            <p><b>TERCERA:</b> En caso de incumplimiento, se aplicará un <strong>interés por mora diaria</strong> de <b id="mora-display">---</b>. Los intereses no pagados se capitalizarán.</p>
-            <p><b>CUARTA:</b> El DEUDOR garantiza el fiel cumplimiento de la obligación contraída con todos sus bienes muebles e inmuebles, habidos y por haber, presentes y futuros sin exclusión alguna.</p>
-            <p><b>QUINTA:</b> El incumplimiento en el pago de una sola cuota hará que la totalidad de la deuda se considere de plazo vencido, líquido y exigible. En tal caso el ACREEDOR queda facultado para exigir el <strong>PAGO TOTAL</strong> del capital adeudado, más los intereses generados y los gastos (administrativos y judiciales), el cual deberá ser cancelado por el DEUDOR en su integridad en un <strong>plazo máximo de 72 horas</strong> calendario a partir de la notificación o requerimiento.</p>
-            <p><b>SEXTA:</b> Declaro mi plena conformidad con todas las cláusulas, términos y condiciones establecidas.</p>
-        </div>
-
-        <div class="contenedor-firmas">
-            <div class="bloque-firma">
-                <canvas id="canvas-firma"></canvas>
-                <div class="firma-linea">
-                    <small style="display:block; font-weight:normal; text-transform:none;">Firma del Cliente</small>
-                    <span id="footer-nom">---</span><br>
-                    <small id="footer-ci" style="text-transform:none;">C.I.: ---</small>
-                </div>
-            </div>
-        </div>
-
-        <button class="btn-clear" id="btn-limpiar" onclick="limpiar()">🔄 REPETIR FIRMA</button>
-
-        <div class="seccion-docs" id="area-respaldos">
-            <div class="grid-docs">
-                <div>
-                    <label class="input-file-label">C.I. ANVERSO:</label>
-                    <input type="file" accept="image/*" onchange="previsualizar(this, 'img-anverso')" id="input-anverso" style="font-size:10px; width:100%;">
-                    <img id="img-anverso" class="img-preview">
-                </div>
-                <div>
-                    <label class="input-file-label">C.I. REVERSO:</label>
-                    <input type="file" accept="image/*" onchange="previsualizar(this, 'img-reverso')" id="input-reverso" style="font-size:10px; width:100%;">
-                    <img id="img-reverso" class="img-preview">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="btn-group" id="grupo-botones">
-        <button class="btn-pdf" onclick="descargarPDF()">📄 DESCARGAR (PDF)</button>
-        <button class="btn-whatsapp" onclick="enviarWhatsApp()">💬 ENVIAR A WHATSAPP</button>
+    <div class="btn-group">
+        <button class="btn-clear" onclick="limpiar()">REPETIR</button>
+        <button class="btn-send" onclick="enviar()">ENVIAR FIRMA</button>
     </div>
 </div>
 
 <script>
     const canvas = document.getElementById('canvas-firma');
     const ctx = canvas.getContext('2d');
-    const PALABRA_SECRETA = "ROCA2026"; 
     let dibujando = false;
-    let haFirmado = false; // Control de validación de firma
 
-    function formatearMonto(valor) {
-        const num = parseFloat(valor);
-        if (isNaN(num)) return "---";
-        return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    }
-
-    function mostrarCarga(texto) {
-        document.getElementById('texto-carga').innerText = texto;
-        document.getElementById('overlay-carga').style.display = 'flex';
-    }
-
-    function ocultarCarga() {
-        document.getElementById('overlay-carga').style.display = 'none';
-    }
-
-    function finalizarProceso() {
-        setTimeout(() => {
-            document.body.innerHTML = `
-                <div class="bloqueo-pantalla">
-                    <div style="font-size: 60px;">✅</div>
-                    <h1 style="color: #10b981;">PROCESO COMPLETADO</h1>
-                    <p>Su sesión ha finalizado.</p>
-                    <p style="font-size: 12px; color: #94a3b8; margin-top: 20px;">Ya puede cerrar esta pestaña.</p>
-                </div>`;
-        }, 2000);
-    }
-
-    function cargarDatosContrato() {
-        const urlParams = new URLSearchParams(window.location.search);
-        
-        const exp = urlParams.get('exp');
-        const tkRecibido = urlParams.get('tk');
-        const nom = decodeURIComponent(urlParams.get('nom') || "").trim();
-        const ci = (urlParams.get('ci') || "").trim();
-        const cap = (urlParams.get('cap') || "").trim();
-        const mon = decodeURIComponent(urlParams.get('mon') || "").trim();
-        const int = (urlParams.get('int') || "").trim();
-        const cf = (urlParams.get('cf') || "").trim();
-        const mora = (urlParams.get('mora') || "").trim();
-
-        // 1. Verificar Expiración
-        if (exp && Date.now() > parseInt(exp)) {
-            document.body.innerHTML = `<div class="bloqueo-pantalla"><h1>⚠️ ENLACE EXPIRADO</h1><p>Por seguridad, este enlace caducó tras 12 horas.</p></div>`;
-            return;
-        }
-
-        // 2. Verificar Sello de Integridad
-        const cadenaAValidar = (nom + ci + cap + mon + int + cf + mora + PALABRA_SECRETA).toUpperCase();
-        const tkCalculado = btoa(unescape(encodeURIComponent(cadenaAValidar))).substring(0, 25);
-
-        if (tkRecibido !== tkCalculado) {
-            document.body.innerHTML = `<div class="bloqueo-pantalla"><h1>❌ ERROR DE SEGURIDAD</h1><p>Se detectó alteración en las condiciones del contrato.</p></div>`;
-            return;
-        }
-
-        // 3. Cargar en pantalla
-        const getP = (key) => {
-            const val = urlParams.get(key);
-            return (val && val !== "null" && val !== "") ? decodeURIComponent(val) : "---";
-        };
-
-        const moneda = getP('mon');
-        const modVal = parseInt(getP('mod')) || 30;
-        const nombresPlazo = { 30: "Mensual", 15: "Quincenal", 7: "Semanal", 1: "Diario" };
-
-        document.getElementById('nom-display').innerText = nom;
-        document.getElementById('ci-display').innerText = ci;
-        document.getElementById('dir-display').innerText = getP('dir');
-        document.getElementById('cap-display').innerText = `${moneda} ${formatearMonto(cap)}`;
-        document.getElementById('literal-display').innerText = getP('lit');
-        document.getElementById('int-display').innerText = int;
-        document.getElementById('plazo-display').innerText = nombresPlazo[modVal] || "Personalizado";
-        document.getElementById('n-display').innerText = getP('n');
-        document.getElementById('cf-display').innerText = `${moneda} ${formatearMonto(cf)}`;
-        document.getElementById('fdes-display').innerText = getP('fD');
-        document.getElementById('f1-display').innerText = getP('f1');
-        document.getElementById('metodo-display').innerText = getP('met');
-        document.getElementById('mora-display').innerText = `${moneda} ${formatearMonto(mora)}`;
-
-        document.getElementById('footer-nom').innerText = nom;
-        document.getElementById('footer-ci').innerText = `C.I.: ${ci}`;
-    }
-
-    function previsualizar(input, idImg) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = document.getElementById(idImg);
-                img.src = e.target.result;
-                img.style.display = "block";
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
+    // Ajuste de alta resolución para pantallas móviles
     function ajustarResolucion() {
         const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width * 2; canvas.height = rect.height * 2;
-        ctx.scale(2, 2); ctx.strokeStyle = "#1e3a8a"; ctx.lineWidth = 2.5; ctx.lineCap = "round";
+        canvas.width = rect.width * 2;
+        canvas.height = rect.height * 2;
+        ctx.scale(2, 2);
+        
+        // CONFIGURACIÓN TINTA AZUL BOLÍGRAFO
+        ctx.strokeStyle = "#1e3a8a"; 
+        ctx.lineWidth = 2.5;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
     }
 
-    window.onload = () => { ajustarResolucion(); cargarDatosContrato(); };
+    // Obtener parámetros de la URL (Nombre y CI)
+    const urlParams = new URLSearchParams(window.location.search);
+    const nombre = urlParams.get('nom') || "CLIENTE";
+    const ci = urlParams.get('ci') || "";
+    document.getElementById('info-cliente').innerText = `${nombre} \n CI: ${ci}`;
+
+    window.onload = ajustarResolucion;
 
     function obtenerPos(e) {
         const r = canvas.getBoundingClientRect();
@@ -242,115 +67,53 @@
         return { x: clientX - r.left, y: clientY - r.top };
     }
 
-    function iniciar(e) { 
-        dibujando = true; 
-        haFirmado = true; // Se registra que el cliente dibujó algo
-        ctx.beginPath(); 
-        const p = obtenerPos(e); 
-        ctx.moveTo(p.x, p.y); 
+    function iniciar(e) {
+        dibujando = true;
+        const p = obtenerPos(e);
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
     }
 
-    function mover(e) { 
-        if (!dibujando) return; 
-        e.preventDefault(); 
-        haFirmado = true; 
-        const p = obtenerPos(e); 
-        ctx.lineTo(p.x, p.y); 
-        ctx.stroke(); 
+    function mover(e) {
+        if (!dibujando) return;
+        e.preventDefault();
+        const p = obtenerPos(e);
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
     }
 
     function detener() { dibujando = false; }
-    
-    canvas.addEventListener('mousedown', iniciar); canvas.addEventListener('mousemove', mover); window.addEventListener('mouseup', detener);
-    canvas.addEventListener('touchstart', iniciar, {passive: false}); canvas.addEventListener('touchmove', mover, {passive: false}); canvas.addEventListener('touchend', detener);
 
-    function limpiar() { 
-        ctx.clearRect(0, 0, canvas.width, canvas.height); 
-        haFirmado = false; // Restablece la firma obligatoria
-    }
+    canvas.addEventListener('mousedown', iniciar);
+    canvas.addEventListener('mousemove', mover);
+    window.addEventListener('mouseup', detener);
 
-    async function enviarWhatsApp() {
-        if (!haFirmado) {
-            alert('⚠️ Debe firmar el contrato en el recuadro antes de continuar.');
-            return;
+    canvas.addEventListener('touchstart', iniciar, {passive: false});
+    canvas.addEventListener('touchmove', mover, {passive: false});
+    canvas.addEventListener('touchend', detener);
+
+    function limpiar() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+
+    function enviar() {
+        const firmaBase64 = canvas.toDataURL("image/png");
+        
+        // Verificamos que haya algo dibujado (longitud mínima de Base64)
+        if (firmaBase64.length < 2000) {
+            return alert("Por favor, realice su firma antes de enviar.");
         }
 
-        mostrarCarga('Generando contrato para WhatsApp...');
-        const tarjeta = document.getElementById('hoja-contrato');
-        const nom = document.getElementById('nom-display').innerText;
-        tarjeta.classList.add('modo-captura');
+        // TU NÚMERO DE TELÉFONO PERSONAL CONFIGURADO (Formato internacional sin el +)
+        const tuTelefono = "56994954980"; 
+        
+        const mensaje = `*INVERSIONES ROCA - FIRMA DIGITAL*%0A` +
+                         `*Cliente:* ${nombre}%0A` +
+                         `*CI:* ${ci}%0A%0A` +
+                         `*CÓDIGO DE FIRMA (Copiar todo):*%0A${firmaBase64}`;
 
-        html2canvas(tarjeta, { scale: 3, useCORS: true }).then(async canvasRes => {
-            tarjeta.classList.remove('modo-captura');
-
-            canvasRes.toBlob(async (blob) => {
-                const archivo = new File([blob], `Contrato_${nom.replace(/\s+/g, '_')}.png`, { type: 'image/png' });
-
-                // 1. Intentar usar Web Share API
-                if (navigator.canShare && navigator.canShare({ files: [archivo] })) {
-                    try {
-                        ocultarCarga();
-                        await navigator.share({
-                            title: 'Contrato de Préstamo',
-                            text: `Hola, adjunto el contrato firmado de ${nom}.`,
-                            files: [archivo]
-                        });
-                        finalizarProceso();
-                        return;
-                    } catch (error) {
-                        if (error.name !== 'AbortError') {
-                            console.error('Error al compartir:', error);
-                        }
-                    }
-                }
-
-                // 2. Respaldo por enlace wa.me + descarga automática de imagen
-                ocultarCarga();
-                const link = document.createElement('a');
-                link.download = `Contrato_${nom.replace(/\s+/g, '_')}.png`;
-                link.href = canvasRes.toDataURL("image/png");
-                link.click();
-
-                const textoMensaje = encodeURIComponent(`Hola, aquí te envío el contrato firmado de ${nom}.`);
-                window.open(`https://wa.me/56994954980?text=${textoMensaje}`, '_blank');
-                
-                finalizarProceso();
-            }, 'image/png');
-        }).catch(err => {
-            ocultarCarga();
-            alert('Ocurrió un error al procesar la imagen.');
-            console.error(err);
-        });
-    }
-
-    async function descargarPDF() {
-        if (!haFirmado) {
-            alert('⚠️ Debe firmar el contrato en el recuadro antes de continuar.');
-            return;
-        }
-
-        mostrarCarga('Generando documento PDF...');
-        const { jsPDF } = window.jspdf;
-        const tarjeta = document.getElementById('hoja-contrato');
-        const nom = document.getElementById('nom-display').innerText;
-        tarjeta.classList.add('modo-captura');
-
-        html2canvas(tarjeta, { scale: 2, useCORS: true }).then(canvasRes => {
-            ocultarCarga();
-            const imgData = canvasRes.toDataURL('image/png');
-            const imgWidthInMm = 190; 
-            const pageHeightInMm = (canvasRes.height * imgWidthInMm) / canvasRes.width;
-            const pdf = new jsPDF('p', 'mm', [imgWidthInMm + 20, pageHeightInMm + 20]);
-            pdf.addImage(imgData, 'PNG', 10, 10, imgWidthInMm, pageHeightInMm);
-            pdf.save(`CONTRATO_ROCA_${nom.replace(/\s+/g, '_')}.pdf`);
-            tarjeta.classList.remove('modo-captura');
-            finalizarProceso();
-        }).catch(err => {
-            ocultarCarga();
-            alert('Ocurrió un error al generar el PDF.');
-            console.error(err);
-        });
+        // Redirigir a WhatsApp
+        window.location.href = `https://wa.me/${tuTelefono}?text=${mensaje}`;
     }
 </script>
+
 </body>
 </html>
