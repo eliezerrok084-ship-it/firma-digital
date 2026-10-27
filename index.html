@@ -169,7 +169,7 @@
     <div class="contrato-texto">
         <p>Conste por el presente documento privado, un contrato <strong>"MUTUO CON INTERÉS"</strong> bajo las siguientes cláusulas, términos y condiciones:</p>
         
-        <p><strong>PRIMERA:</strong> Yo <span id="txt-nombre">ELVIN ROLY ROCA</span>, con C.I./DNI: <span id="txt-ci">8976926</span>, con domicilio en <span id="txt-dir">ANTOFAGASTA - CHILE</span>,  declaro recibir de <strong>ELVIN ELIEZER ROCA RIBEIRO</strong>, con C.I./DNI: 8976926, la suma de: <span id="txt-moneda">$</span> <span id="txt-cap">5,000.00</span> (SON: <span id="txt-lit">CINCO MIL CON 00/100 PESOS CHILENOS</span>), en calidad de préstamo, y a mi entera satisfacción.</p>
+        <p><strong>PRIMERA:</strong> Yo <span id="txt-nombre">ELVIN ROLY ROCA</span>, con C.I./DNI: <span id="txt-ci">8976926</span>, con domicilio en <span id="txt-dir">ANTOFAGASTA - CHILE</span>, declaro recibir de <strong>ELVIN ELIEZER ROCA RIBEIRO</strong>, con C.I./DNI: 8976926, la suma de: <span id="txt-moneda">$</span> <span id="txt-cap">5,000.00</span> (SON: <span id="txt-lit">CINCO MIL CON 00/100 PESOS CHILENOS</span>), en calidad de préstamo, y a mi entera satisfacción.</p>
         
         <p><strong>SEGUNDA:</strong> El interés será del <span id="txt-int">10</span>%, pagadero de forma Mensual. El cual se devolverá en <span id="txt-mod">4</span> cuotas de <span id="txt-moneda2">$</span> <span id="txt-cf">1,577.35</span>.</p>
         
@@ -237,7 +237,7 @@
         ctx.lineJoin = "round";
     }
 
-    // Lectura exacta y dinámica de parámetros de la URL
+    // Lectura exacta y robusta de parámetros de la URL
     const urlParams = new URLSearchParams(window.location.search);
     const nombre = urlParams.get('nom') || urlParams.get('nombre') || "ELVIN ROLY ROCA";
     const ci = urlParams.get('ci') || "8976926";
@@ -247,14 +247,17 @@
     const capital = urlParams.get('cap') || urlParams.get('monto') || "5,000.00";
     const literal = urlParams.get('lit') || "CINCO MIL CON 00/100 PESOS CHILENOS";
     const interes = urlParams.get('int') || "10";
-    const modCuotas = urlParams.get('mod') || urlParams.get('cuo') || urlParams.get('ncu') || "4";
+    
+    // Captura prioritaria de cuotas desde 'n' o 'mod'
+    const modCuotas = urlParams.get('n') || urlParams.get('mod') || urlParams.get('cuo') || urlParams.get('ncu') || "4";
+    
     const cuotaVal = urlParams.get('cf') || urlParams.get('cuotavalor') || "1,577.35";
     const desembolso = urlParams.get('fD') || urlParams.get('fechadesembolso') || "2026-10-27";
     const metodo = urlParams.get('met') || urlParams.get('metodo') || "TRANSFERENCIA";
     const fecha1ra = urlParams.get('f1') || urlParams.get('fechacuota') || "2026-11-27";
     const mora = urlParams.get('mora') || "50.00";
 
-    // Inyectar datos reales
+    // Inyectar datos reales al documento
     document.getElementById('txt-nombre').innerText = nombre;
     document.getElementById('txt-ci').innerText = ci;
     document.getElementById('txt-dir').innerText = dir;
