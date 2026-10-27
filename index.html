@@ -1,3 +1,4 @@
+C
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -169,9 +170,9 @@
     <div class="contrato-texto">
         <p>Conste por el presente documento privado, un contrato <strong>"MUTUO CON INTERÉS"</strong> bajo las siguientes cláusulas, términos y condiciones:</p>
         
-        <p><strong>PRIMERA:</strong> Yo <span id="txt-nombre">ELVIN ROLY ROCA</span>, con C.I./DNI: <span id="txt-ci">8976926</span>, con domicilio en <span id="txt-dir">ANTOFAGASTA - CHILE</span>, declaro recibir de <strong>ELVIN ELIEZER ROCA RIBEIRO</strong>, con C.I./DNI: 8976926, la suma de: <span id="txt-moneda">$</span> <span id="txt-cap">5,000.00</span> (SON: <span id="txt-lit">CINCO MIL CON 00/100 PESOS CHILENOS</span>), en calidad de préstamo, y a mi entera satisfacción.</p>
+        <p><strong>PRIMERA:</strong> Yo <span id="txt-nombre">ELVIN ROCA R.</span>, con C.I./DNI: <span id="txt-ci">123</span>, con domicilio en <span id="txt-dir">SANTA CRUZ</span>, declaro recibir de <strong>ELVIN ELIEZER ROCA RIBEIRO</strong>, con C.I./DNI: 8976926, la suma de: <span id="txt-moneda">Bs.</span> <span id="txt-cap">5,000</span> (SON: <span id="txt-lit">CINCO MIL CON 00/100 BOLIVIANOS</span>), en calidad de préstamo, y a mi entera satisfacción.</p>
         
-        <p><strong>SEGUNDA:</strong> El interés será del <span id="txt-int">10</span>%, pagadero de forma Mensual. El cual se devolverá en <span id="txt-mod">4</span> cuotas de <span id="txt-moneda2">$</span> <span id="txt-cf">1,577.35</span>.</p>
+        <p><strong>SEGUNDA:</strong> El interés será del <span id="txt-int">2</span>%, pagadero de forma Mensual. El cual se devolverá en <span id="txt-mod">6</span> cuotas de <span id="txt-moneda2">Bs.</span> <span id="txt-cf">892.63</span>.</p>
         
         <div class="detalle-box">
             <div>• Fecha de Desembolso: <span id="txt-fd">2026-10-27</span></div>
@@ -179,7 +180,7 @@
             <div>• Fecha Primera Cuota: <span id="txt-f1">2026-11-27</span></div>
         </div>
 
-        <p><strong>TERCERA:</strong> En caso de incumplimiento, se aplicará un interés por mora diaria de <span id="txt-moneda3">$</span> <span id="txt-mora">50.00</span>, los intereses no pagados se capitalizarán.</p>
+        <p><strong>TERCERA:</strong> En caso de incumplimiento, se aplicará un interés por mora diaria de <span id="txt-moneda3">Bs.</span> <span id="txt-mora">50</span>, los intereses no pagados se capitalizarán.</p>
         
         <p><strong>CUARTA:</strong> El DEUDOR garantiza el fiel cumplimiento de la obligación contraída en el presente contrato con todos sus bienes muebles e inmuebles, habidos y por haber, presentes y futuros, sin exclusión alguna.</p>
         
@@ -211,8 +212,8 @@
 
     <div class="linea-firma">
         Firma del Cliente<br>
-        <span id="txt-firma-nombre">ELVIN ROLY ROCA</span><br>
-        C.I./DNI: <span id="txt-firma-ci">8976926</span>
+        <span id="txt-firma-nombre">ELVIN ROCA R.</span><br>
+        C.I./DNI: <span id="txt-firma-ci">123</span>
     </div>
 
     <div class="btn-group" id="controles-botones">
@@ -237,31 +238,29 @@
         ctx.lineJoin = "round";
     }
 
-    // Lectura exacta y robusta de parámetros de la URL
+    // Lectura exacta y directa de los parámetros de tu URL
     const urlParams = new URLSearchParams(window.location.search);
-    const nombre = urlParams.get('nom') || urlParams.get('nombre') || "ELVIN ROLY ROCA";
-    const ci = urlParams.get('ci') || "8976926";
-    const dir = urlParams.get('dir') || urlParams.get('domicilio') || "ANTOFAGASTA - CHILE";
-    const ec = urlParams.get('ec') || urlParams.get('estadocivil') || "SOLTERO";
-    const moneda = urlParams.get('mon') || urlParams.get('moneda') || "$";
-    const capital = urlParams.get('cap') || urlParams.get('monto') || "5,000.00";
-    const literal = urlParams.get('lit') || "CINCO MIL CON 00/100 PESOS CHILENOS";
-    const interes = urlParams.get('int') || "10";
+    const nombre = urlParams.get('nom') || "ELVIN ROCA R.";
+    const ci = urlParams.get('ci') || "123";
+    const dir = urlParams.get('dir') || "SANTA CRUZ";
+    const moneda = urlParams.get('mon') || "Bs.";
+    const capital = urlParams.get('cap') || "5000";
+    const literal = urlParams.get('lit') || "CINCO MIL CON 00/100 BOLIVIANOS";
+    const interes = urlParams.get('int') || "2";
     
-    // Captura prioritaria de cuotas desde 'n' o 'mod'
-    const modCuotas = urlParams.get('n') || urlParams.get('mod') || urlParams.get('cuo') || urlParams.get('ncu') || "4";
+    // Captura exacta priorizando 'n' (número de cuotas del array de pagos) sobre 'mod'
+    const modCuotas = urlParams.get('n') || urlParams.get('mod') || urlParams.get('cuo') || "6";
     
-    const cuotaVal = urlParams.get('cf') || urlParams.get('cuotavalor') || "1,577.35";
-    const desembolso = urlParams.get('fD') || urlParams.get('fechadesembolso') || "2026-10-27";
-    const metodo = urlParams.get('met') || urlParams.get('metodo') || "TRANSFERENCIA";
-    const fecha1ra = urlParams.get('f1') || urlParams.get('fechacuota') || "2026-11-27";
-    const mora = urlParams.get('mora') || "50.00";
+    const cuotaVal = urlParams.get('cf') || "892.63";
+    const desembolso = urlParams.get('fD') || "2026-10-27";
+    const metodo = urlParams.get('met') || "TRANSFERENCIA";
+    const fecha1ra = urlParams.get('f1') || "2026-11-27";
+    const mora = urlParams.get('mora') || "50";
 
-    // Inyectar datos reales al documento
+    // Inyectar datos reales al documento de manera dinámica
     document.getElementById('txt-nombre').innerText = nombre;
     document.getElementById('txt-ci').innerText = ci;
     document.getElementById('txt-dir').innerText = dir;
-    document.getElementById('txt-ec').innerText = ec;
     document.getElementById('txt-moneda').innerText = moneda;
     document.getElementById('txt-moneda2').innerText = moneda;
     document.getElementById('txt-moneda3').innerText = moneda;
