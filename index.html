@@ -23,7 +23,7 @@
             background: #ffffff; 
             color: #1e293b; 
             width: 100%; 
-            max-width: 500px; 
+            max-width: 520px; 
             border-radius: 16px; 
             padding: 15px; 
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); 
@@ -40,21 +40,21 @@
         .subtitulo {
             font-size: 12px;
             color: #64748b;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             font-weight: 500;
             text-align: center;
         }
         .contrato-box {
-            font-size: 10.5px;
-            line-height: 1.4;
+            font-size: 10px;
+            line-height: 1.45;
             color: #334155;
             background: #f8fafc;
             border: 1px solid #e2e8f0;
-            padding: 10px;
+            padding: 12px;
             border-radius: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
-        .contrato-box p { margin: 0 0 6px 0; }
+        .contrato-box p { margin: 0 0 6px 0; text-align: justify; }
         .cliente-box { 
             background: #f1f5f9; 
             border: 1px solid #cbd5e1; 
@@ -118,7 +118,7 @@
             background: #ffffff; 
             touch-action: none; 
             width: 100%; 
-            height: 140px; 
+            height: 130px; 
             display: block; 
             cursor: crosshair; 
         }
@@ -156,13 +156,20 @@
     
     <div class="contrato-box">
         <p><strong>CONTRATO DE PRÉSTAMO "MUTUO CON INTERÉS"</strong></p>
-        <p><strong>PRIMERA:</strong> Yo <span id="txt-nombre">ELI</span>, con C.I./DNI: <span id="txt-ci">1234</span>, con domicilio en ANTOFA, declaro recibir de <strong>ELVIN ELIEZER ROCA RIBEIRO</strong> (C.I.: 8976926), la suma de: <span id="txt-monto">$ 1,000.00</span> (SON: MIL PESOS CHILENOS) a entera satisfacción.</p>
-        <p><strong>SEGUNDA:</strong> Interés 10% mensual, pagadero en 3 cuotas de $ 402.11.<br>
-        • Desembolso: 2026-10-27 | Método: TRANSFERENCIA | 1ra Cuota: 2026-11-27</p>
-        <p><strong>TERCERA:</strong> Mora diaria de $ 50.00 por incumplimiento; intereses no pagados se capitalizarán.</p>
-        <p><strong>CUARTA:</strong> El DEUDOR garantiza con todos sus bienes muebles e inmuebles, habidos y por haber.</p>
-        <p><strong>QUINTA:</strong> El incumplimiento de una sola cuota hará exigible el PAGO TOTAL de la deuda en un plazo máximo de 72 horas.</p>
-        <p><strong>SEXTA:</strong> Plena conformidad con todas las cláusulas establecidas.</p>
+        <p>Conste por el presente documento privado, un contrato bajo las siguientes cláusulas, términos y condiciones:</p>
+        
+        <p><strong>PRIMERA:</strong> Yo <span id="txt-nombre">ELI</span>, con C.I./DNI: <span id="txt-ci">1234</span>, con domicilio en ANTOFA, declaro recibir de <strong>ELVIN ELIEZER ROCA RIBEIRO</strong>, con C.I./DNI: 8976926, la suma de: <span id="txt-monto">$ 1,000.00</span> (SON: MIL CON 00/100 PESOS CHILENOS), en calidad de préstamo, y a mi entera satisfacción.</p>
+        
+        <p><strong>SEGUNDA:</strong> El interés será del 10%, pagadero de forma Mensual. El cual se devolverá en 3 cuotas de $ 402.11.<br>
+        • Fecha de Desembolso: 2026-10-27 | Método: TRANSFERENCIA | 1ra Cuota: 2026-11-27</p>
+        
+        <p><strong>TERCERA:</strong> En caso de incumplimiento, se aplicará un interés por mora diaria de $ 50.00, los intereses no pagados se capitalizarán.</p>
+        
+        <p><strong>CUARTA:</strong> El DEUDOR garantiza el fiel cumplimiento de la obligación contraída en el presente contrato con todos sus bienes muebles e inmuebles, habidos y por haber, presentes y futuros, sin exclusión alguna.</p>
+        
+        <p><strong>QUINTA:</strong> El incumplimiento en el pago de una sola de las cuotas pactadas hará que la totalidad de la deuda se considere de plazo vencido, líquido y exigible. En tal caso, el ACREEDOR queda plenamente facultado para exigir el PAGO TOTAL del capital adeudado, más los intereses generados y gastos (administrativos y judiciales), el cual deberá ser cancelado por el DEUDOR en su integridad en un plazo máximo de 72 horas calendario a partir de la notificación o requerimiento.</p>
+        
+        <p><strong>SEXTA:</strong> Declaro mi plena conformidad con todas las cláusulas, términos y condiciones establecidas en el presente documento.</p>
     </div>
 
     <div class="cliente-box" id="info-cliente">Cargando datos del cliente...</div>
@@ -171,12 +178,12 @@
         <div class="ci-title">Fotografía de Cédula de Identidad</div>
         <div class="ci-grid">
             <label class="ci-upload-box">
-                📷 C.I. Anverso
+                📁 C.I. Anverso
                 <input type="file" id="file-anverso" accept="image/*" onchange="mostrarPreview(this, 'prev-anverso')">
                 <img id="prev-anverso" class="ci-preview">
             </label>
             <label class="ci-upload-box">
-                📷 C.I. Reverso
+                📁 C.I. Reverso
                 <input type="file" id="file-reverso" accept="image/*" onchange="mostrarPreview(this, 'prev-reverso')">
                 <img id="prev-reverso" class="ci-preview">
             </label>
@@ -212,7 +219,7 @@
     const nombre = urlParams.get('nom') || "ELI";
     const ci = urlParams.get('ci') || "1234";
     
-    document.getElementById('info-cliente').innerText = `${nombre} - CI: ${ci}`;
+    document.getElementById('info-cliente').innerText = `${nombre} \n CI: ${ci}`;
     document.getElementById('txt-nombre').innerText = nombre;
     document.getElementById('txt-ci').innerText = ci;
 
