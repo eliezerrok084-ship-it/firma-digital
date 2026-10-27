@@ -3,28 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Firma Digital - Inversiones ROCA</title>
+    <title>Contrato de Préstamo y Firma Digital - Inversiones ROCA</title>
     <style>
-        body { font-family: 'Inter', sans-serif; background: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; padding: 10px; box-sizing: border-box; }
-        .card { background: #ffffff; color: #1e293b; width: 100%; max-width: 420px; border-radius: 16px; padding: 25px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); text-align: center; }
-        h2 { margin: 0 0 5px 0; color: #1e3a8a; font-size: 22px; letter-spacing: -0.5px; }
-        .cliente-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 10px; margin-bottom: 20px; font-weight: 600; color: #334155; font-size: 14px; }
-        canvas { border: 2px dashed #cbd5e1; border-radius: 12px; background: #fff; touch-action: none; width: 100%; height: 280px; display: block; cursor: crosshair; }
-        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-        button { border: none; padding: 16px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 14px; transition: all 0.2s; }
-        .btn-clear { background: #f1f5f9; color: #64748b; }
-        .btn-send { background: #1e3a8a; color: white; box-shadow: 0 4px 6px -1px rgba(30, 58, 138, 0.3); }
-        .btn-send:active { transform: scale(0.96); }
-        .instruccion { font-size: 12px; color: #94a3b8; margin-bottom: 10px; font-style: italic; }
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background: #f1f5f9; 
+            color: #1e293b; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            padding: 15px; 
+        }
+        .card { 
+            background: #ffffff; 
+            color: #1e293b; 
+            width: 100%; 
+            max-width: 520px; 
+            border-radius: 20px; 
+            padding: 25px; 
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); 
+            text-align: left; 
+            border: 1px solid #e2e8f0;
+        }
+        h2 { 
+            margin: 0 0 5px 0; 
+            color: #1e3a8a; 
+            font-size: 20px; 
+            font-weight: 800;
+            text-align: center;
+            letter-spacing: -0.5px; 
+        }
+        .subtitulo {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 20px;
+            font-weight: 500;
+            text-align: center;
+        }
+        .contrato-box {
+            font-size: 12px;
+            line-height: 1.6;
+            color: #334155;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+        .contrato-box p { margin: 0 0 10px 0; }
+        .cliente-box { 
+            background: #f1f5f9; 
+            border: 1px solid #cbd5e1; 
+            padding: 12px; 
+            border-radius: 10px; 
+            margin-bottom: 15px; 
+            font-weight: 700; 
+            color: #0f172a; 
+            font-size: 14px; 
+            text-align: center;
+        }
+        .instruccion { 
+            font-size: 12px; 
+            color: #475569; 
+            margin-bottom: 6px; 
+            font-weight: 600; 
+            text-align: center;
+        }
+        canvas { 
+            border: 2px dashed #94a3b8; 
+            border-radius: 12px; 
+            background: #ffffff; 
+            touch-action: none; 
+            width: 100%; 
+            height: 200px; 
+            display: block; 
+            cursor: crosshair; 
+        }
+        .btn-group { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 10px; 
+            margin-top: 15px; 
+        }
+        button { 
+            border: none; 
+            padding: 14px; 
+            border-radius: 10px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-size: 13px; 
+        }
+        .btn-clear { 
+            background: #f1f5f9; 
+            color: #475569; 
+            border: 1px solid #cbd5e1;
+        }
+        .btn-clear:active { background: #e2e8f0; }
+        .btn-send { 
+            background: #1e3a8a; 
+            color: white; 
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3); 
+        }
+        .btn-send:active { transform: scale(0.97); background: #172554; }
     </style>
 </head>
 <body>
 
 <div class="card">
     <h2>INVERSIONES ROCA</h2>
+    <div class="subtitulo">Contrato de Préstamo y Firma Digital</div>
+    
+    <div class="contrato-box">
+        <p><strong>CONTRATO DE PRÉSTAMO</strong></p>
+        <p>Conste por el presente documento privado, un contrato <strong>"MUTUO CON INTERÉS"</strong> bajo las siguientes cláusulas, términos y condiciones:</p>
+        
+        <p><strong>PRIMERA:</strong> Yo <span id="txt-nombre">ELI</span>, con C.I./DNI: <span id="txt-ci">1234</span>, con domicilio en ANTOFA, declaro recibir de <strong>ELVIN ELIEZER ROCA RIBEIRO</strong>, con C.I./DNI: 8976926, la suma de: <span id="txt-monto">$ 1,000.00</span> (SON: MIL CON 00/100 PESOS CHILENOS), en calidad de préstamo, y a mi entera satisfacción.</p>
+        
+        <p><strong>SEGUNDA:</strong> El interés será del 10%, pagadero de forma Mensual. El cual se devolverá en 3 cuotas de $ 402.11.<br>
+        • Fecha de Desembolso: 2026-10-27<br>
+        • Método: TRANSFERENCIA<br>
+        • Fecha Primera Cuota: 2026-11-27</p>
+        
+        <p><strong>TERCERA:</strong> En caso de incumplimiento, se aplicará un interés por mora diaria de $ 50.00, los intereses no pagados se capitalizarán.</p>
+        
+        <p><strong>CUARTA:</strong> El DEUDOR garantiza el fiel cumplimiento de la obligación contraída en el presente contrato con todos sus bienes muebles e inmuebles, habidos y por haber, presentes y futuros, sin exclusión alguna.</p>
+        
+        <p><strong>QUINTA:</strong> El incumplimiento en el pago de una sola de las cuotas pactadas hará que la totalidad de la deuda se considere de plazo vencido, líquido y exigible. En tal caso, el ACREEDOR queda plenamente facultado para exigir el PAGO TOTAL del capital adeudado, más los intereses generados y gastos (administrativos y judiciales), el cual deberá ser cancelado por el DEUDOR en su integridad en un plazo máximo de 72 horas calendario a partir de la notificación o requerimiento.</p>
+        
+        <p><strong>SEXTA:</strong> Declaro mi plena conformidad con todas las cláusulas, términos y condiciones establecidas en el presente documento.</p>
+    </div>
+
     <div class="cliente-box" id="info-cliente">Cargando datos del cliente...</div>
     
-    <p class="instruccion">Firme aquí con su dedo (Trazo Azul Marino)</p>
+    <p class="instruccion">Firme aquí con su dedo</p>
     <canvas id="canvas-firma"></canvas>
 
     <div class="btn-group">
@@ -50,9 +166,12 @@
     }
 
     const urlParams = new URLSearchParams(window.location.search);
-    const nombre = urlParams.get('nom') || "CLIENTE";
-    const ci = urlParams.get('ci') || "";
+    const nombre = urlParams.get('nom') || "ELI";
+    const ci = urlParams.get('ci') || "1234";
+    
     document.getElementById('info-cliente').innerText = `${nombre} \n CI: ${ci}`;
+    document.getElementById('txt-nombre').innerText = nombre;
+    document.getElementById('txt-ci').innerText = ci;
 
     window.onload = ajustarResolucion;
 
@@ -97,12 +216,12 @@
             return alert("Por favor, realice su firma antes de enviar.");
         }
 
-        const tuTelefono = "56994954980"; // Tu número real de WhatsApp
+        const tuTelefono = "56994954980"; 
         
-        const mensaje = `*INVERSIONES ROCA - FIRMA DIGITAL*%0A` +
+        const mensaje = `*INVERSIONES ROCA - CONTRATO Y FIRMA*%0A` +
                          `*Cliente:* ${nombre}%0A` +
                          `*CI:* ${ci}%0A%0A` +
-                         `*CÓDIGO DE FIRMA (Copiar todo):*%0A${firmaBase64}`;
+                         `*CÓDIGO DE FIRMA:*%0A${firmaBase64}`;
 
         window.location.href = `https://wa.me/${tuTelefono}?text=${mensaje}`;
     }
