@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Contrato de Préstamo y Firma Digital - Inversiones ROCA</title>
+    <!-- Librería html2canvas para generar la imagen completa del contrato -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * { box-sizing: border-box; }
         body { 
@@ -12,138 +14,179 @@
             color: #1e293b; 
             display: flex; 
             justify-content: center; 
-            align-items: center; 
+            align-items: flex-start; 
             min-height: 100vh; 
             margin: 0; 
-            padding: 15px; 
+            padding: 10px; 
         }
         .card { 
             background: #ffffff; 
             color: #1e293b; 
             width: 100%; 
-            max-width: 520px; 
-            border-radius: 20px; 
-            padding: 25px; 
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); 
+            max-width: 500px; 
+            border-radius: 16px; 
+            padding: 15px; 
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); 
             text-align: left; 
             border: 1px solid #e2e8f0;
         }
         h2 { 
-            margin: 0 0 5px 0; 
+            margin: 0 0 2px 0; 
             color: #1e3a8a; 
-            font-size: 20px; 
+            font-size: 18px; 
             font-weight: 800;
-            text-align: center;
-            letter-spacing: -0.5px; 
+            text-align: center; 
         }
         .subtitulo {
-            font-size: 13px;
+            font-size: 12px;
             color: #64748b;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             font-weight: 500;
             text-align: center;
         }
         .contrato-box {
-            font-size: 12px;
-            line-height: 1.6;
+            font-size: 10.5px;
+            line-height: 1.4;
             color: #334155;
             background: #f8fafc;
             border: 1px solid #e2e8f0;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            max-height: 250px;
-            overflow-y: auto;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
         }
-        .contrato-box p { margin: 0 0 10px 0; }
+        .contrato-box p { margin: 0 0 6px 0; }
         .cliente-box { 
             background: #f1f5f9; 
             border: 1px solid #cbd5e1; 
-            padding: 12px; 
-            border-radius: 10px; 
-            margin-bottom: 15px; 
+            padding: 8px; 
+            border-radius: 8px; 
+            margin-bottom: 10px; 
             font-weight: 700; 
             color: #0f172a; 
-            font-size: 14px; 
+            font-size: 12px; 
             text-align: center;
         }
+        .ci-section {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 8px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        .ci-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+        .ci-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .ci-upload-box {
+            border: 2px dashed #cbd5e1;
+            padding: 6px;
+            border-radius: 6px;
+            text-align: center;
+            background: #ffffff;
+            font-size: 10px;
+            cursor: pointer;
+            color: #475569;
+            font-weight: 600;
+        }
+        .ci-upload-box input { display: none; }
+        .ci-preview {
+            width: 100%;
+            height: 45px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-top: 4px;
+            display: none;
+        }
         .instruccion { 
-            font-size: 12px; 
+            font-size: 11px; 
             color: #475569; 
-            margin-bottom: 6px; 
+            margin-bottom: 4px; 
             font-weight: 600; 
             text-align: center;
         }
         canvas { 
             border: 2px dashed #94a3b8; 
-            border-radius: 12px; 
+            border-radius: 10px; 
             background: #ffffff; 
             touch-action: none; 
             width: 100%; 
-            height: 200px; 
+            height: 140px; 
             display: block; 
             cursor: crosshair; 
         }
         .btn-group { 
             display: grid; 
             grid-template-columns: 1fr 1fr; 
-            gap: 10px; 
-            margin-top: 15px; 
+            gap: 8px; 
+            margin-top: 10px; 
         }
         button { 
             border: none; 
-            padding: 14px; 
-            border-radius: 10px; 
+            padding: 12px; 
+            border-radius: 8px; 
             font-weight: bold; 
             cursor: pointer; 
-            font-size: 13px; 
+            font-size: 12px; 
         }
         .btn-clear { 
             background: #f1f5f9; 
             color: #475569; 
             border: 1px solid #cbd5e1;
         }
-        .btn-clear:active { background: #e2e8f0; }
         .btn-send { 
             background: #1e3a8a; 
             color: white; 
-            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3); 
+            box-shadow: 0 4px 10px rgba(30, 58, 138, 0.3); 
         }
-        .btn-send:active { transform: scale(0.97); background: #172554; }
     </style>
 </head>
 <body>
 
-<div class="card">
+<div class="card" id="area-captura">
     <h2>INVERSIONES ROCA</h2>
     <div class="subtitulo">Contrato de Préstamo y Firma Digital</div>
     
     <div class="contrato-box">
-        <p><strong>CONTRATO DE PRÉSTAMO</strong></p>
-        <p>Conste por el presente documento privado, un contrato <strong>"MUTUO CON INTERÉS"</strong> bajo las siguientes cláusulas, términos y condiciones:</p>
-        
-        <p><strong>PRIMERA:</strong> Yo <span id="txt-nombre">ELI</span>, con C.I./DNI: <span id="txt-ci">1234</span>, con domicilio en ANTOFA, declaro recibir de <strong>ELVIN ELIEZER ROCA RIBEIRO</strong>, con C.I./DNI: 8976926, la suma de: <span id="txt-monto">$ 1,000.00</span> (SON: MIL CON 00/100 PESOS CHILENOS), en calidad de préstamo, y a mi entera satisfacción.</p>
-        
-        <p><strong>SEGUNDA:</strong> El interés será del 10%, pagadero de forma Mensual. El cual se devolverá en 3 cuotas de $ 402.11.<br>
-        • Fecha de Desembolso: 2026-10-27<br>
-        • Método: TRANSFERENCIA<br>
-        • Fecha Primera Cuota: 2026-11-27</p>
-        
-        <p><strong>TERCERA:</strong> En caso de incumplimiento, se aplicará un interés por mora diaria de $ 50.00, los intereses no pagados se capitalizarán.</p>
-        
-        <p><strong>CUARTA:</strong> El DEUDOR garantiza el fiel cumplimiento de la obligación contraída en el presente contrato con todos sus bienes muebles e inmuebles, habidos y por haber, presentes y futuros, sin exclusión alguna.</p>
-        
-        <p><strong>QUINTA:</strong> El incumplimiento en el pago de una sola de las cuotas pactadas hará que la totalidad de la deuda se considere de plazo vencido, líquido y exigible. En tal caso, el ACREEDOR queda plenamente facultado para exigir el PAGO TOTAL del capital adeudado, más los intereses generados y gastos (administrativos y judiciales), el cual deberá ser cancelado por el DEUDOR en su integridad en un plazo máximo de 72 horas calendario a partir de la notificación o requerimiento.</p>
-        
-        <p><strong>SEXTA:</strong> Declaro mi plena conformidad con todas las cláusulas, términos y condiciones establecidas en el presente documento.</p>
+        <p><strong>CONTRATO DE PRÉSTAMO "MUTUO CON INTERÉS"</strong></p>
+        <p><strong>PRIMERA:</strong> Yo <span id="txt-nombre">ELI</span>, con C.I./DNI: <span id="txt-ci">1234</span>, con domicilio en ANTOFA, declaro recibir de <strong>ELVIN ELIEZER ROCA RIBEIRO</strong> (C.I.: 8976926), la suma de: <span id="txt-monto">$ 1,000.00</span> (SON: MIL PESOS CHILENOS) a entera satisfacción.</p>
+        <p><strong>SEGUNDA:</strong> Interés 10% mensual, pagadero en 3 cuotas de $ 402.11.<br>
+        • Desembolso: 2026-10-27 | Método: TRANSFERENCIA | 1ra Cuota: 2026-11-27</p>
+        <p><strong>TERCERA:</strong> Mora diaria de $ 50.00 por incumplimiento; intereses no pagados se capitalizarán.</p>
+        <p><strong>CUARTA:</strong> El DEUDOR garantiza con todos sus bienes muebles e inmuebles, habidos y por haber.</p>
+        <p><strong>QUINTA:</strong> El incumplimiento de una sola cuota hará exigible el PAGO TOTAL de la deuda en un plazo máximo de 72 horas.</p>
+        <p><strong>SEXTA:</strong> Plena conformidad con todas las cláusulas establecidas.</p>
     </div>
 
     <div class="cliente-box" id="info-cliente">Cargando datos del cliente...</div>
+
+    <div class="ci-section">
+        <div class="ci-title">Fotografía de Cédula de Identidad</div>
+        <div class="ci-grid">
+            <label class="ci-upload-box">
+                📷 C.I. Anverso
+                <input type="file" id="file-anverso" accept="image/*" onchange="mostrarPreview(this, 'prev-anverso')">
+                <img id="prev-anverso" class="ci-preview">
+            </label>
+            <label class="ci-upload-box">
+                📷 C.I. Reverso
+                <input type="file" id="file-reverso" accept="image/*" onchange="mostrarPreview(this, 'prev-reverso')">
+                <img id="prev-reverso" class="ci-preview">
+            </label>
+        </div>
+    </div>
     
     <p class="instruccion">Firme aquí con su dedo</p>
     <canvas id="canvas-firma"></canvas>
 
-    <div class="btn-group">
+    <div class="btn-group" id="controles-botones">
         <button class="btn-clear" onclick="limpiar()">REPETIR</button>
         <button class="btn-send" onclick="enviar()">ENVIAR FIRMA</button>
     </div>
@@ -169,11 +212,23 @@
     const nombre = urlParams.get('nom') || "ELI";
     const ci = urlParams.get('ci') || "1234";
     
-    document.getElementById('info-cliente').innerText = `${nombre} \n CI: ${ci}`;
+    document.getElementById('info-cliente').innerText = `${nombre} - CI: ${ci}`;
     document.getElementById('txt-nombre').innerText = nombre;
     document.getElementById('txt-ci').innerText = ci;
 
     window.onload = ajustarResolucion;
+
+    function mostrarPreview(input, imgId) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById(imgId);
+                img.src = e.target.result;
+                img.style.display = 'block';
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
 
     function obtenerPos(e) {
         const r = canvas.getBoundingClientRect();
@@ -210,20 +265,34 @@
     function limpiar() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
     function enviar() {
-        const firmaBase64 = canvas.toDataURL("image/png");
-        
-        if (firmaBase64.length < 2000) {
+        if (canvas.toDataURL("image/png").length < 2000) {
             return alert("Por favor, realice su firma antes de enviar.");
         }
 
-        const tuTelefono = "56994954980"; 
-        
-        const mensaje = `*INVERSIONES ROCA - CONTRATO Y FIRMA*%0A` +
-                         `*Cliente:* ${nombre}%0A` +
-                         `*CI:* ${ci}%0A%0A` +
-                         `*CÓDIGO DE FIRMA:*%0A${firmaBase64}`;
+        const botones = document.getElementById('controles-botones');
+        botones.style.display = 'none';
 
-        window.location.href = `https://wa.me/${tuTelefono}?text=${mensaje}`;
+        html2canvas(document.getElementById('area-captura'), { scale: 1.5, useCORS: true }).then(canvasCaptura => {
+            botones.style.display = 'grid';
+            
+            // Descargar la imagen del contrato firmado en el dispositivo
+            const enlace = document.createElement('a');
+            enlace.download = `Contrato_${nombre}_${ci}.png`;
+            enlace.href = canvasCaptura.toDataURL("image/png", 0.8);
+            enlace.click();
+
+            // Abrir WhatsApp con un reporte seguro y limpio
+            const tuTelefono = "56994954980"; 
+            const mensaje = `*INVERSIONES ROCA - CONTRATO Y FIRMA*%0A` +
+                             `*Cliente:* ${nombre}%0A` +
+                             `*CI:* ${ci}%0A` +
+                             `¡El contrato firmado y la cédula se han generado y guardado correctamente!`;
+
+            window.location.href = `https://wa.me/${tuTelefono}?text=${encodeURIComponent(mensaje)}`;
+        }).catch(err => {
+            botones.style.display = 'grid';
+            alert("Error al procesar la imagen del contrato.");
+        });
     }
 </script>
 
