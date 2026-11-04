@@ -120,8 +120,7 @@
             border: 2px dashed #64748b; 
             border-radius: 4px; 
             background: #ffffff; 
-            /* Se cambió a 'auto' para permitir zoom y desplazamiento libre en el celular */
-            touch-action: auto; 
+            touch-action: none; 
             width: 100%; 
             height: 130px; 
             display: block; 
@@ -324,6 +323,7 @@
 
     function mover(e) {
         if (!dibujando) return;
+        e.preventDefault();
         const p = obtenerPos(e);
         ctx.lineTo(p.x, p.y);
         ctx.stroke();
@@ -335,19 +335,8 @@
     canvas.addEventListener('mousemove', mover);
     window.addEventListener('mouseup', detener);
 
-    // Se añadió e.targetTouches para asegurar que el trazo responda con un solo dedo sin interferir con el zoom de la pantalla
-    canvas.addEventListener('touchstart', function(e) {
-        if (e.targetTouches.length === 1) {
-            iniciar(e);
-        }
-    }, {passive: true});
-
-    canvas.addEventListener('touchmove', function(e) {
-        if (dibujando && e.targetTouches.length === 1) {
-            mover(e);
-        }
-    }, {passive: true});
-
+    canvas.addEventListener('touchstart', iniciar, {passive: false});
+    canvas.addEventListener('touchmove', mover, {passive: false});
     canvas.addEventListener('touchend', detener);
 
     function limpiar() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
@@ -357,8 +346,10 @@
             return alert("Por favor, realice su firma antes de enviar.");
         }
 
+        const botones = document.getElementById('controles-botones');
         const btnWaFijo = document.getElementById('btn-wa-fijo');
         
+        // Ocultar botones temporalmente durante el renderizado
         document.querySelector('.btn-send').style.display = 'none';
         document.querySelector('.btn-clear').style.display = 'none';
 
@@ -368,14 +359,17 @@
             allowTaint: true,
             backgroundColor: '#ffffff' 
         }).then(canvasCaptura => {
+            // Restaurar botones de control
             document.querySelector('.btn-send').style.display = 'block';
             document.querySelector('.btn-clear').style.display = 'block';
             
+            // 1. Descarga garantizada de la imagen completa
             const enlace = document.createElement('a');
             enlace.download = `Contrato_${nombre}_${ci}.png`;
             enlace.href = canvasCaptura.toDataURL("image/png", 0.90);
             enlace.click();
 
+            // 2. Preparar el enlace de WhatsApp y mostrar botón dedicado
             const tuTelefono = "56994954980"; 
             const mensaje = `*INVERSIONES ROCA - CONTRATO Y FIRMA*%0A` +
                              `*Cliente:* ${nombre}%0A` +
@@ -384,6 +378,7 @@
 
             linkWhatsAppGlobal = `https://wa.me/${tuTelefono}?text=${encodeURIComponent(mensaje)}`;
             
+            // Mostrar botón verde para ir a WhatsApp sin interrumpir la descarga
             btnWaFijo.style.display = 'block';
             alert("¡Contrato generado y descargado con éxito en su equipo! Ahora puede hacer clic en 'IR A WHATSAPP' para enviar la confirmación.");
         }).catch(err => {
