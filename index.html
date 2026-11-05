@@ -213,7 +213,7 @@
     </div>
 
     <div class="ci-section" id="seccion-ci">
-        <div class="ci-title">FOTOGRAFÍA DE CÉDULA DE IDENTIDAD</div>
+        <div class="ci-title"></div>
         <div class="ci-grid">
             <label class="ci-upload-box" id="box-anverso">
                  C.I. Anverso
@@ -221,7 +221,7 @@
                 <img id="prev-anverso" class="ci-preview" crossorigin="anonymous">
             </label>
             <label class="ci-upload-box" id="box-reverso">
-                 C.I. Reverso
+                C.I. Reverso
                 <input type="file" id="file-reverso" accept="image/*" onchange="mostrarPreview(this, 'prev-reverso', 'box-reverso')">
                 <img id="prev-reverso" class="ci-preview" crossorigin="anonymous">
             </label>
@@ -240,7 +240,7 @@
     </div>
 
     <div class="footer-digital">
-        Contrato con Firma Digital • Inversiones ROCA
+        Contrato con Firma Digital 
     </div>
 
     <div class="btn-group" id="controles-botones">
@@ -300,9 +300,10 @@
     function mostrarPantallaCerrada() {
         document.body.innerHTML = `
             <div style="background: #ffffff; max-width: 500px; margin: 50px auto; padding: 40px; border-radius: 8px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.15); border: 1px solid #94a3b8;">
-                <h2 style="color: #1e3a8a; font-family: Arial, sans-serif; margin-bottom: 15px;">CONTRATO FINALIZADO</h2>
-                <p style="font-size: 14px; line-height: 1.6; color: #334155;">Este contrato digital ya fue firmado y descargado con éxito anteriormente.</p>
-                <p style="font-size: 12px; color: #64748b; margin-top: 15px;">Por seguridad de Inversiones ROCA, este enlace ha quedado desactivado.</p>
+                <h2 style="color: #1e3a8a; font-family: Arial, sans-serif; margin-bottom: 15px;">CONTRATO FIRMADO </h2>
+                <p style="font-size: 14px; line-height: 1.6; color: #334155;">Este contrato digital ya fue firmado y descargado.</p>
+                <p style="font-size: 12px; color: #64748b; margin-top: 15px;">Por seguridad este enlace ha quedado desactivado</p>
+                <p style="font-size: 12px; color: #64748b; margin-top: 15px;">Atte. Elvin Eliezer Roca R.</p>
             </div>
         `;
     }
