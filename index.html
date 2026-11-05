@@ -348,13 +348,12 @@
                 const imgTemp = new Image();
                 imgTemp.src = e.target.result;
                 imgTemp.onload = function() {
-                    // Creamos un canvas oculto para redimensionar y comprimir la imagen
                     const canvasComp = document.createElement('canvas');
                     const ctxComp = canvasComp.getContext('2d');
                     
                     let ancho = imgTemp.width;
                     let alto = imgTemp.height;
-                    const maxTam = 800; // Límite máximo de píxeles para mantener calidad nítida pero liviana
+                    const maxTam = 800;
 
                     if (ancho > alto && ancho > maxTam) {
                         alto *= maxTam / ancho;
@@ -368,7 +367,6 @@
                     canvasComp.height = alto;
                     ctxComp.drawImage(imgTemp, 0, 0, ancho, alto);
 
-                    // Comprimimos a JPEG con calidad 0.75 (reduce hasta un 80% el peso sin perder legibilidad)
                     const imagenComprimida = canvasComp.toDataURL('image/jpeg', 0.75);
 
                     const img = document.getElementById(imgId);
@@ -438,7 +436,7 @@
             document.querySelector('.btn-send').style.display = 'block';
             document.querySelector('.btn-clear').style.display = 'block';
             
-            // 1. Descarga garantizada de la imagen completa
+            // 1. Descarga garantizada de la imagen completa a la galería
             const enlace = document.createElement('a');
             enlace.download = `Contrato_${nombre.replace(/\s+/g, '_')}_${ci}.png`;
             enlace.href = canvasCaptura.toDataURL("image/png", 0.90);
@@ -447,17 +445,12 @@
             // 2. ACTIVAR AUTODESTRUCCIÓN / BLOQUEO DEL ENLACE DE UN SOLO USO
             localStorage.setItem(`contrato_firmado_${ci}`, "true");
 
-            // 3. Preparar el enlace de WhatsApp y mostrar botón dedicado
+            // 3. Preparar enlace de WhatsApp LIMPIO (SIN TEXTO PREDEFINIDO)
             const tuTelefono = "56994954980"; 
-            const mensaje = `*INVERSIONES ROCA - CONTRATO Y FIRMA DIGITAL*%0A` +
-                             `*Cliente:* ${nombre}%0A` +
-                             `*CI:* ${ci}%0A` +
-                             `¡El contrato formal firmado con carnet y firma digital se ha generado y descargado correctamente en mi equipo!`;
-
-            linkWhatsAppGlobal = `https://wa.me/${tuTelefono}?text=${encodeURIComponent(mensaje)}`;
+            linkWhatsAppGlobal = `https://wa.me/${tuTelefono}`;
             
             btnWaFijo.style.display = 'block';
-            alert("¡Contrato firmado, generado y descargado con éxito! El enlace ha quedado inutilizado por seguridad. Haga clic en 'IR A WHATSAPP' para notificar.");
+            alert("¡Contrato descargado en su dispositivo! Haga clic en 'IR A WHATSAPP' y adjunte la imagen de su contrato recién descargada.");
         }).catch(err => {
             document.querySelector('.btn-send').style.display = 'block';
             document.querySelector('.btn-clear').style.display = 'block';
