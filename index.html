@@ -134,6 +134,16 @@
             font-size: 13px;
             font-weight: bold;
         }
+        .footer-digital {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 10.5px;
+            color: #475569;
+            font-family: Arial, sans-serif;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 8px;
+            font-weight: bold;
+        }
         .btn-group { 
             display: grid; 
             grid-template-columns: 1fr 1fr; 
@@ -229,6 +239,10 @@
         C.I./DNI: <span id="txt-firma-ci">123</span>
     </div>
 
+    <div class="footer-digital">
+        Contrato con Firma Digital • Inversiones ROCA
+    </div>
+
     <div class="btn-group" id="controles-botones">
         <button class="btn-clear" onclick="limpiar()">REPETIR FIRMA</button>
         <button class="btn-send" onclick="enviar()">ENVIAR CONTRATO</button>
@@ -242,6 +256,60 @@
     let dibujando = false;
     let linkWhatsAppGlobal = "";
 
+    // Lectura exacta y directa de los parámetros de tu URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const nombre = urlParams.get('nom') || "ELVIN ROCA R.";
+    const ci = urlParams.get('ci') || "123";
+    const dir = urlParams.get('dir') || "SANTA CRUZ";
+    const moneda = urlParams.get('mon') || "Bs.";
+    const capital = urlParams.get('cap') || "5000";
+    const literal = urlParams.get('lit') || "CINCO MIL CON 00/100 BOLIVIANOS";
+    const interes = urlParams.get('int') || "2";
+    const modCuotas = urlParams.get('n') || urlParams.get('mod') || urlParams.get('cuo') || "6";
+    const cuotaVal = urlParams.get('cf') || "892.63";
+    const desembolso = urlParams.get('fD') || "2026-10-27";
+    const metodo = urlParams.get('met') || "TRANSFERENCIA";
+    const fecha1ra = urlParams.get('f1') || "2026-11-27";
+    const mora = urlParams.get('mora') || "50";
+    const tiempoToken = urlParams.get('t'); // Parámetro opcional para caducidad por tiempo
+
+    // Validación de Token de un solo uso y Expiración Temporal (24 Horas)
+    window.onload = function() {
+        const contratoKey = `contrato_firmado_${ci}`;
+        const yaFirmado = localStorage.getItem(contratoKey);
+
+        if (yaFirmado === "true") {
+            document.getElementById('area-captura').innerHTML = `
+                <div style="text-align:center; padding: 50px 20px;">
+                    <h2 style="color: #dc2626; font-family: Arial, sans-serif;">ENLACE EXPIRADO</h2>
+                    <p style="font-size: 14px; line-height: 1.6;">Este contrato digital ya fue firmado y descargado con anterioridad.</p>
+                    <p style="font-size: 12px; color: #64748b;">Por seguridad de Inversiones ROCA, este enlace de un solo uso ha quedado desactivado automáticamente.</p>
+                </div>
+            `;
+            return;
+        }
+
+        // Validación de 24 horas si se pasa el parámetro de tiempo 't' (milisegundos)
+        if (tiempoToken) {
+            const horaGeneracion = parseInt(tiempoToken);
+            const horaActual = new Date().getTime();
+            const diferenciaHoras = (horaActual - horaGeneracion) / (1000 * 60 * 60);
+            
+            if (diferenciaHoras > 24) {
+                document.getElementById('area-captura').innerHTML = `
+                    <div style="text-align:center; padding: 50px 20px;">
+                        <h2 style="color: #dc2626; font-family: Arial, sans-serif;">PLAZO VENCIDO</h2>
+                        <p style="font-size: 14px; line-height: 1.6;">El plazo de 24 horas para la firma digital de este contrato ha expirado.</p>
+                        <p style="font-size: 12px; color: #64748b;">Comuníquese con Inversiones ROCA para generar un nuevo enlace.</p>
+                    </div>
+                `;
+                return;
+            }
+        }
+
+        ajustarResolucion();
+    };
+
     function ajustarResolucion() {
         const rect = canvas.getBoundingClientRect();
         canvas.width = rect.width * 2;
@@ -252,24 +320,6 @@
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
     }
-
-    // Lectura exacta y directa de los parámetros de tu URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const nombre = urlParams.get('nom') || "ELVIN ROCA R.";
-    const ci = urlParams.get('ci') || "123";
-    const dir = urlParams.get('dir') || "SANTA CRUZ";
-    const moneda = urlParams.get('mon') || "Bs.";
-    const capital = urlParams.get('cap') || "5000";
-    const literal = urlParams.get('lit') || "CINCO MIL CON 00/100 BOLIVIANOS";
-    const interes = urlParams.get('int') || "2";
-    
-    const modCuotas = urlParams.get('n') || urlParams.get('mod') || urlParams.get('cuo') || "6";
-    
-    const cuotaVal = urlParams.get('cf') || "892.63";
-    const desembolso = urlParams.get('fD') || "2026-10-27";
-    const metodo = urlParams.get('met') || "TRANSFERENCIA";
-    const fecha1ra = urlParams.get('f1') || "2026-11-27";
-    const mora = urlParams.get('mora') || "50";
 
     // Inyectar datos reales al documento de manera dinámica
     document.getElementById('txt-nombre').innerText = nombre;
@@ -290,18 +340,46 @@
     document.getElementById('txt-firma-nombre').innerText = nombre;
     document.getElementById('txt-firma-ci').innerText = ci;
 
-    window.onload = ajustarResolucion;
-
+    // Optimización y Compresión Automática de Fotos del Carnet
     function mostrarPreview(input, imgId, boxId) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                const img = document.getElementById(imgId);
-                img.crossOrigin = "anonymous";
-                img.src = e.target.result;
-                img.style.display = 'block';
-                const box = document.getElementById(boxId);
-                box.style.border = "1px solid #94a3b8";
+                const imgTemp = new Image();
+                imgTemp.src = e.target.result;
+                imgTemp.onload = function() {
+                    // Creamos un canvas oculto para redimensionar y comprimir la imagen
+                    const canvasComp = document.createElement('canvas');
+                    const ctxComp = canvasComp.getContext('2d');
+                    
+                    let ancho = imgTemp.width;
+                    let alto = imgTemp.height;
+                    const maxTam = 800; // Límite máximo de píxeles para mantener calidad nítida pero liviana
+
+                    if (ancho > alto && ancho > maxTam) {
+                        alto *= maxTam / ancho;
+                        ancho = maxTam;
+                    } else if (alto > maxTam) {
+                        ancho *= maxTam / alto;
+                        alto = maxTam;
+                    }
+
+                    canvasComp.width = ancho;
+                    canvasComp.height = alto;
+                    ctxComp.drawImage(imgTemp, 0, 0, ancho, alto);
+
+                    // Comprimimos a JPEG con calidad 0.75 (reduce hasta un 80% el peso sin perder legibilidad)
+                    const imagenComprimida = canvasComp.toDataURL('image/jpeg', 0.75);
+
+                    const img = document.getElementById(imgId);
+                    img.crossOrigin = "anonymous";
+                    img.src = imagenComprimida;
+                    img.style.display = 'block';
+                    
+                    const box = document.getElementById(boxId);
+                    box.style.border = "1px solid #16a34a";
+                    box.style.background = "#f0fdf4";
+                }
             }
             reader.readAsDataURL(input.files[0]);
         }
@@ -346,10 +424,8 @@
             return alert("Por favor, realice su firma antes de enviar.");
         }
 
-        const botones = document.getElementById('controles-botones');
         const btnWaFijo = document.getElementById('btn-wa-fijo');
         
-        // Ocultar botones temporalmente durante el renderizado
         document.querySelector('.btn-send').style.display = 'none';
         document.querySelector('.btn-clear').style.display = 'none';
 
@@ -359,33 +435,34 @@
             allowTaint: true,
             backgroundColor: '#ffffff' 
         }).then(canvasCaptura => {
-            // Restaurar botones de control
             document.querySelector('.btn-send').style.display = 'block';
             document.querySelector('.btn-clear').style.display = 'block';
             
             // 1. Descarga garantizada de la imagen completa
             const enlace = document.createElement('a');
-            enlace.download = `Contrato_${nombre}_${ci}.png`;
+            enlace.download = `Contrato_${nombre.replace(/\s+/g, '_')}_${ci}.png`;
             enlace.href = canvasCaptura.toDataURL("image/png", 0.90);
             enlace.click();
 
-            // 2. Preparar el enlace de WhatsApp y mostrar botón dedicado
+            // 2. ACTIVAR AUTODESTRUCCIÓN / BLOQUEO DEL ENLACE DE UN SOLO USO
+            localStorage.setItem(`contrato_firmado_${ci}`, "true");
+
+            // 3. Preparar el enlace de WhatsApp y mostrar botón dedicado
             const tuTelefono = "56994954980"; 
-            const mensaje = `*INVERSIONES ROCA - CONTRATO Y FIRMA*%0A` +
+            const mensaje = `*INVERSIONES ROCA - CONTRATO Y FIRMA DIGITAL*%0A` +
                              `*Cliente:* ${nombre}%0A` +
                              `*CI:* ${ci}%0A` +
-                             `¡El contrato formal firmado con carnet y firma se ha generado y descargado correctamente en mi equipo!`;
+                             `¡El contrato formal firmado con carnet y firma digital se ha generado y descargado correctamente en mi equipo!`;
 
             linkWhatsAppGlobal = `https://wa.me/${tuTelefono}?text=${encodeURIComponent(mensaje)}`;
             
-            // Mostrar botón verde para ir a WhatsApp sin interrumpir la descarga
             btnWaFijo.style.display = 'block';
-            alert("¡Contrato generado y descargado con éxito en su equipo! Ahora puede hacer clic en 'IR A WHATSAPP' para enviar la confirmación.");
+            alert("¡Contrato firmado, generado y descargado con éxito! El enlace ha quedado inutilizado por seguridad. Haga clic en 'IR A WHATSAPP' para notificar.");
         }).catch(err => {
             document.querySelector('.btn-send').style.display = 'block';
             document.querySelector('.btn-clear').style.display = 'block';
             console.error(err);
-            alert("Error al procesar la imagen del contrato. Intente subiendo fotos más livianas del carnet.");
+            alert("Error al procesar la imagen del contrato. Intente nuevamente.");
         });
     }
 
