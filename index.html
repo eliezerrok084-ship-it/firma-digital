@@ -16,16 +16,15 @@
             align-items: flex-start; 
             min-height: 100vh; 
             margin: 0; 
-            padding: 10px; 
+            padding: 20px 10px; 
         }
         .sheet { 
             background: #ffffff !important; 
             color: #000000; 
-            width: 100%; 
-            max-width: 750px; 
-            min-width: 0px; 
+            width: 750px; 
+            min-width: 750px; 
             border-radius: 4px; 
-            padding: 30px 20px; 
+            padding: 40px 35px; 
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); 
             text-align: left; 
             border: 1px solid #94a3b8;
@@ -439,10 +438,11 @@
         if (btnClearFirma) btnClearFirma.style.display = 'none';
 
         html2canvas(document.getElementById('area-captura'), { 
-            scale: 1.5, 
+            scale: 2, 
             useCORS: true, 
             allowTaint: true,
-            backgroundColor: '#ffffff' 
+            backgroundColor: '#ffffff',
+            windowWidth: 800
         }).then(canvasCaptura => {
             const enlace = document.createElement('a');
             enlace.download = `Contrato_${nombre.replace(/\s+/g, '_')}_${ci}.png`;
