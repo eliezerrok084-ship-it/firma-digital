@@ -273,14 +273,13 @@
     const mora = urlParams.get('mora') || "50";
     const tiempoToken = urlParams.get('t');
 
-    // Función auxiliar para formatear números con separadores de miles y decimales exactos
-    function formatearNumero(valor, decimales = 2) {
+    // Función auxiliar para formatear números de forma estricta con separador de miles (punto) y decimales (coma)
+    function formatearNumeroEstricto(valor, decimales = 2) {
         const num = parseFloat(valor);
         if (isNaN(num)) return valor;
-        return num.toLocaleString('es-BO', { 
-            minimumFractionDigits: decimales, 
-            maximumFractionDigits: decimales 
-        });
+        let partes = num.toFixed(decimales).split('.');
+        partes[0] = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        return partes.join(',');
     }
 
     // Validación de Token de un solo uso y Expiración Temporal (24 Horas)
@@ -329,22 +328,22 @@
         ctx.lineJoin = "round";
     }
 
-    // Inyectar datos reales al documento de manera dinámica con separadores de miles
+    // Inyectar datos reales al documento de manera dinámica con separadores de miles y decimales estrictos
     document.getElementById('txt-nombre').innerText = nombre;
     document.getElementById('txt-ci').innerText = ci;
     document.getElementById('txt-dir').innerText = dir;
     document.getElementById('txt-moneda').innerText = moneda;
     document.getElementById('txt-moneda2').innerText = moneda;
     document.getElementById('txt-moneda3').innerText = moneda;
-    document.getElementById('txt-cap').innerText = formatearNumero(capital, capital.includes('.') ? 2 : 0);
+    document.getElementById('txt-cap').innerText = formatearNumeroEstricto(capital, capital.includes('.') ? 2 : 0);
     document.getElementById('txt-lit').innerText = literal;
     document.getElementById('txt-int').innerText = interes;
     document.getElementById('txt-mod').innerText = modCuotas;
-    document.getElementById('txt-cf').innerText = formatearNumero(cuotaVal, 2);
+    document.getElementById('txt-cf').innerText = formatearNumeroEstricto(cuotaVal, 2);
     document.getElementById('txt-fd').innerText = desembolso;
     document.getElementById('txt-met').innerText = metodo;
     document.getElementById('txt-f1').innerText = fecha1ra;
-    document.getElementById('txt-mora').innerText = formatearNumero(mora, mora.includes('.') ? 2 : 0);
+    document.getElementById('txt-mora').innerText = formatearNumeroEstricto(mora, mora.includes('.') ? 2 : 0);
     document.getElementById('txt-firma-nombre').innerText = nombre;
     document.getElementById('txt-firma-ci').innerText = ci;
 
