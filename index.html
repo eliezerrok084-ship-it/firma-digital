@@ -63,7 +63,8 @@
             border: 1px solid #cbd5e1;
             padding: 12px;
             border-radius: 6px;
-            margin-bottom: 25px;
+            margin-top: 25px;
+            margin-bottom: 20px;
         }
         .ci-title {
             font-size: 12px;
@@ -212,22 +213,6 @@
         <p><strong>SEXTA:</strong> Declaro mi plena conformidad con todas las cláusulas, términos y condiciones establecidas en el presente documento.</p>
     </div>
 
-    <div class="ci-section" id="seccion-ci">
-        <div class="ci-title">FOTOGRAFÍA DE CÉDULA DE IDENTIDAD</div>
-        <div class="ci-grid">
-            <label class="ci-upload-box" id="box-anverso">
-                 C.I. Anverso
-                <input type="file" id="file-anverso" accept="image/*" onchange="mostrarPreview(this, 'prev-anverso', 'box-anverso')">
-                <img id="prev-anverso" class="ci-preview" crossorigin="anonymous">
-            </label>
-            <label class="ci-upload-box" id="box-reverso">
-                 C.I. Reverso
-                <input type="file" id="file-reverso" accept="image/*" onchange="mostrarPreview(this, 'prev-reverso', 'box-reverso')">
-                <img id="prev-reverso" class="ci-preview" crossorigin="anonymous">
-            </label>
-        </div>
-    </div>
-
     <div class="firma-contenedor">
         <p class="instruccion">Firme aquí con su dedo</p>
         <canvas id="canvas-firma"></canvas>
@@ -241,6 +226,23 @@
 
     <div class="footer-digital">
         Contrato con Firma Digital • Inversiones ROCA
+    </div>
+
+    <!-- Sección de Cédula de Identidad ubicada debajo del pie digital -->
+    <div class="ci-section" id="seccion-ci">
+        <div class="ci-title"></div>
+        <div class="ci-grid">
+            <label class="ci-upload-box" id="box-anverso">
+                 C.I. Anverso
+                <input type="file" id="file-anverso" accept="image/*" onchange="mostrarPreview(this, 'prev-anverso', 'box-anverso')">
+                <img id="prev-anverso" class="ci-preview" crossorigin="anonymous">
+            </label>
+            <label class="ci-upload-box" id="box-reverso">
+                 C.I. Reverso
+                <input type="file" id="file-reverso" accept="image/*" onchange="mostrarPreview(this, 'prev-reverso', 'box-reverso')">
+                <img id="prev-reverso" class="ci-preview" crossorigin="anonymous">
+            </label>
+        </div>
     </div>
 
     <div class="btn-group" id="controles-botones">
@@ -424,8 +426,17 @@
     function limpiar() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
     function enviar() {
+        // 1. Validación obligatoria de Firma Digital en el Canvas
         if (canvas.toDataURL("image/png").length < 2000) {
-            return alert("Por favor, realice su firma antes de enviar.");
+            return alert("Por favor, realice su firma digital antes de enviar.");
+        }
+
+        // 2. Validación obligatoria de Cédula de Identidad (Anverso y Reverso)
+        const fileAnverso = document.getElementById('file-anverso').files[0];
+        const fileReverso = document.getElementById('file-reverso').files[0];
+
+        if (!fileAnverso || !fileReverso) {
+            return alert("Por favor, suba obligatoriamente ambas fotografías de su Cédula de Identidad (Anverso y Reverso) para continuar.");
         }
 
         const btnWaFijo = document.getElementById('btn-wa-fijo');
@@ -439,22 +450,21 @@
             allowTaint: true,
             backgroundColor: '#ffffff' 
         }).then(canvasCaptura => {
-            // 1. Descarga de la imagen a la galería
+            // Descarga de la imagen a la galería
             const enlace = document.createElement('a');
             enlace.download = `Contrato_${nombre.replace(/\s+/g, '_')}_${ci}.png`;
             enlace.href = canvasCaptura.toDataURL("image/png", 0.90);
             enlace.click();
 
-            // 2. Activar bloqueo permanente (Token de un solo uso)
+            // Activar bloqueo permanente (Token de un solo uso)
             localStorage.setItem(`contrato_firmado_${ci}`, "true");
 
-            // 3. Preparar enlace de WhatsApp limpio
+            // Preparar enlace de WhatsApp limpio
             const tuTelefono = "56994954980"; 
             linkWhatsAppGlobal = `https://wa.me/${tuTelefono}`;
             
             btnWaFijo.style.display = 'block';
             
-            // 4. Transformar la pantalla inmediatamente tras descargar para cerrar el ciclo
             setTimeout(() => {
                 mostrarPantallaCerrada();
             }, 1000);
