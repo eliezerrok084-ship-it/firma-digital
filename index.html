@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contrato de Préstamo - Inversiones ROCA</title>
+    <title>Contrato de Préstamo</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * { box-sizing: border-box; }
@@ -16,19 +16,24 @@
             align-items: flex-start; 
             min-height: 100vh; 
             margin: 0; 
-            padding: 10px; 
+            padding: 15px; 
         }
         .sheet { 
             background: #ffffff !important; 
             color: #000000; 
             width: 100%; 
-            max-width: 650px; 
+            max-width: 750px; 
             border-radius: 4px; 
-            padding: 40px 35px; 
+            padding: 25px 20px; 
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); 
             text-align: left; 
             border: 1px solid #94a3b8;
-            margin: 10px auto;
+            margin: 0 auto;
+        }
+        @media (min-width: 768px) {
+            .sheet {
+                padding: 50px 45px;
+            }
         }
         h2 { 
             margin: 0 0 25px 0; 
@@ -229,15 +234,15 @@
     </div>
 
     <div class="ci-section" id="seccion-ci">
-        <div class="ci-title"></div>
+        <div class="ci-title">FOTOGRAFÍA DE CÉDULA DE IDENTIDAD</div>
         <div class="ci-grid">
             <label class="ci-upload-box" id="box-anverso">
-                 C.I. Anverso
+                📁 C.I. Anverso
                 <input type="file" id="file-anverso" accept="image/*" onchange="mostrarPreview(this, 'prev-anverso', 'box-anverso')">
                 <img id="prev-anverso" class="ci-preview" crossorigin="anonymous">
             </label>
             <label class="ci-upload-box" id="box-reverso">
-                C.I. Reverso
+                📁 C.I. Reverso
                 <input type="file" id="file-reverso" accept="image/*" onchange="mostrarPreview(this, 'prev-reverso', 'box-reverso')">
                 <img id="prev-reverso" class="ci-preview" crossorigin="anonymous">
             </label>
@@ -444,21 +449,13 @@
         document.querySelector('.btn-send').style.display = 'none';
         if (btnClearFirma) btnClearFirma.style.display = 'none';
 
-        // Forzar un ancho fijo profesional en la captura (800px) para que NUNCA salga estirado ni en forma de tira
-        const elementoContrato = document.getElementById('area-captura');
-        const anchoOriginal = elementoContrato.style.width;
-        elementoContrato.style.width = "800px";
-
-        html2canvas(elementoContrato, { 
-            scale: 2, 
+        html2canvas(document.getElementById('area-captura'), { 
+            scale: 1.5, 
             useCORS: true, 
             allowTaint: true,
             backgroundColor: '#ffffff' 
         }).then(canvasCaptura => {
-            // Restaurar el ancho original en pantalla
-            elementoContrato.style.width = anchoOriginal;
-
-            // Descarga de la imagen con proporción correcta de documento a la galería
+            // Descarga de la imagen limpia a la galería
             const enlace = document.createElement('a');
             enlace.download = `Contrato_${nombre.replace(/\s+/g, '_')}_${ci}.png`;
             enlace.href = canvasCaptura.toDataURL("image/png", 0.90);
@@ -479,9 +476,8 @@
 
             alert("¡Contrato descargado con éxito! Haga clic en 'IR A WHATSAPP' para adjuntar la imagen.");
         }).catch(err => {
-            elementoContrato.style.width = anchoOriginal;
             document.querySelector('.btn-send').style.display = 'block';
-            if (btnClearFirma) clearFirmaBtn.style.display = 'block';
+            if (btnClearFirma) btnClearFirma.style.display = 'block';
             console.error(err);
             alert("Error al procesar la imagen del contrato. Intente nuevamente.");
         });
