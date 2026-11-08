@@ -444,21 +444,36 @@
 
         const btnWaFijo = document.getElementById('btn-wa-fijo');
         const btnClearFirma = document.querySelector('.btn-clear');
+        const areaCaptura = document.getElementById('area-captura');
         
         // Ocultar botones interactivos para que NO salgan en la captura de la imagen
         document.querySelector('.btn-send').style.display = 'none';
         if (btnClearFirma) btnClearFirma.style.display = 'none';
 
-        html2canvas(document.getElementById('area-captura'), { 
-            scale: 1.5, 
+        // FIJAR UN ANCHO PROFESIONAL DE 760px Y PADDING DE DOCUMENTO FORMAL ANTES DE CAPTURAR
+        const styleOriginalWidth = areaCaptura.style.width;
+        const styleOriginalMaxWidth = areaCaptura.style.maxWidth;
+        const styleOriginalPadding = areaCaptura.style.padding;
+        
+        areaCaptura.style.width = "760px";
+        areaCaptura.style.maxWidth = "760px";
+        areaCaptura.style.padding = "50px 45px";
+
+        html2canvas(areaCaptura, { 
+            scale: 2, // Alta definición para que el texto y la firma salgan súper nítidos
             useCORS: true, 
             allowTaint: true,
             backgroundColor: '#ffffff' 
         }).then(canvasCaptura => {
-            // Descarga de la imagen limpia a la galería
+            // Restaurar los estilos originales en la pantalla del celular del cliente
+            areaCaptura.style.width = styleOriginalWidth;
+            areaCaptura.style.maxWidth = styleOriginalMaxWidth;
+            areaCaptura.style.padding = styleOriginalPadding;
+
+            // Descarga de la imagen con proporción seria y formal
             const enlace = document.createElement('a');
             enlace.download = `Contrato_${nombre.replace(/\s+/g, '_')}_${ci}.png`;
-            enlace.href = canvasCaptura.toDataURL("image/png", 0.90);
+            enlace.href = canvasCaptura.toDataURL("image/png", 0.95);
             enlace.click();
 
             // Activar bloqueo permanente (Token de un solo uso)
@@ -474,8 +489,11 @@
                 mostrarPantallaCerrada();
             }, 1000);
 
-            alert("¡Contrato descargado con éxito! Haga clic en 'IR A WHATSAPP' para adjuntar la imagen.");
+            alert("¡Contrato descargado con éxito con formato profesional! Haga clic en 'IR A WHATSAPP' para adjuntar la imagen.");
         }).catch(err => {
+            areaCaptura.style.width = styleOriginalWidth;
+            areaCaptura.style.maxWidth = styleOriginalMaxWidth;
+            areaCaptura.style.padding = styleOriginalPadding;
             document.querySelector('.btn-send').style.display = 'block';
             if (btnClearFirma) btnClearFirma.style.display = 'block';
             console.error(err);
