@@ -225,7 +225,7 @@
     </div>
 
     <div class="footer-digital">
-        Contrato con Firma Digital • Inversiones ROCA
+        Contrato con Firma Digital 
     </div>
 
     <!-- Sección de Cédula de Identidad ubicada debajo del pie digital -->
@@ -426,7 +426,7 @@
     function limpiar() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
     function enviar() {
-        // 1. Validación obligatoria de Firma Digital en el Canvas
+        // 1. Validación estricta y obligatoria de la firma digital en el canvas
         if (canvas.toDataURL("image/png").length < 2000) {
             return alert("Por favor, realice su firma digital antes de enviar.");
         }
