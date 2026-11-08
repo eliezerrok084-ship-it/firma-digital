@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contrato de Préstamo </title>
+    <title>Contrato de Préstamo</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * { box-sizing: border-box; }
@@ -22,12 +22,14 @@
             background: #ffffff !important; 
             color: #000000; 
             width: 100%; 
-            max-width: 650px; 
+            max-width: 750px; 
+            min-width: 600px; 
             border-radius: 4px; 
-            padding: 40px 30px; 
+            padding: 50px 45px; 
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); 
             text-align: left; 
             border: 1px solid #94a3b8;
+            margin: 0 auto;
         }
         h2 { 
             margin: 0 0 25px 0; 
@@ -192,7 +194,7 @@
 
 <div class="sheet" id="area-captura">
     <h2>CONTRATO DE PRÉSTAMO</h2>
-    <div style="text-align: center; font-size: 11.5px; font-weight: bold; font-family: Arial, sans-serif; margin-top: -15px; margin-bottom: 25px; color: #475569; letter-spacing: 0.5px;">Documento  Privado</div>
+    <div style="text-align: center; font-size: 11.5px; font-weight: bold; font-family: Arial, sans-serif; margin-top: -15px; margin-bottom: 25px; color: #475569; letter-spacing: 0.5px;">Documento Privado</div>
     <div class="contrato-texto">
         <p>Conste por el presente documento privado, un contrato <strong>"MUTUO CON INTERÉS"</strong> bajo las siguientes cláusulas, términos y condiciones:</p>
         
@@ -227,18 +229,16 @@
         C.I./DNI: <span id="txt-firma-ci">123</span>
     </div>
 
-    
-
     <div class="ci-section" id="seccion-ci">
-        <div class="ci-title"></div>
+        <div class="ci-title">FOTOGRAFÍA DE CÉDULA DE IDENTIDAD</div>
         <div class="ci-grid">
             <label class="ci-upload-box" id="box-anverso">
-                 C.I. Anverso
+                📁 C.I. Anverso
                 <input type="file" id="file-anverso" accept="image/*" onchange="mostrarPreview(this, 'prev-anverso', 'box-anverso')">
                 <img id="prev-anverso" class="ci-preview" crossorigin="anonymous">
             </label>
             <label class="ci-upload-box" id="box-reverso">
-                 C.I. Reverso
+                📁 C.I. Reverso
                 <input type="file" id="file-reverso" accept="image/*" onchange="mostrarPreview(this, 'prev-reverso', 'box-reverso')">
                 <img id="prev-reverso" class="ci-preview" crossorigin="anonymous">
             </label>
@@ -310,7 +310,7 @@
     function mostrarPantallaCerrada() {
         document.body.innerHTML = `
             <div style="background: #ffffff; max-width: 500px; margin: 50px auto; padding: 40px; border-radius: 8px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.15); border: 1px solid #94a3b8;">
-                <h2 style="color: #1e3a8a; font-family: Arial, sans-serif; margin-bottom: 15px;">CONTRATO YA FIRMADO </h2>
+                <h2 style="color: #1e3a8a; font-family: Arial, sans-serif; margin-bottom: 15px;">CONTRATO YA FIRMADO</h2>
                 <p style="font-size: 14px; line-height: 1.6; color: #334155;">Este contrato digital ya fue firmado y descargado con éxito anteriormente.</p>
                 <p style="font-size: 12px; color: #64748b; margin-top: 15px;">Por seguridad, este enlace ha quedado desactivado.</p>
             </div>
