@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contrato de Préstamo</title>
+    <title>Contrato de Préstamo - Inversiones ROCA</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * { box-sizing: border-box; }
@@ -24,11 +24,11 @@
             width: 100%; 
             max-width: 650px; 
             border-radius: 4px; 
-            padding: 35px 25px; 
+            padding: 40px 35px; 
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); 
             text-align: left; 
             border: 1px solid #94a3b8;
-            margin: 0 auto;
+            margin: 10px auto;
         }
         h2 { 
             margin: 0 0 25px 0; 
@@ -237,7 +237,7 @@
                 <img id="prev-anverso" class="ci-preview" crossorigin="anonymous">
             </label>
             <label class="ci-upload-box" id="box-reverso">
-                 C.I. Reverso
+                C.I. Reverso
                 <input type="file" id="file-reverso" accept="image/*" onchange="mostrarPreview(this, 'prev-reverso', 'box-reverso')">
                 <img id="prev-reverso" class="ci-preview" crossorigin="anonymous">
             </label>
@@ -444,13 +444,21 @@
         document.querySelector('.btn-send').style.display = 'none';
         if (btnClearFirma) btnClearFirma.style.display = 'none';
 
-        html2canvas(document.getElementById('area-captura'), { 
-            scale: 1.5, 
+        // Forzar un ancho fijo profesional en la captura (800px) para que NUNCA salga estirado ni en forma de tira
+        const elementoContrato = document.getElementById('area-captura');
+        const anchoOriginal = elementoContrato.style.width;
+        elementoContrato.style.width = "800px";
+
+        html2canvas(elementoContrato, { 
+            scale: 2, 
             useCORS: true, 
             allowTaint: true,
             backgroundColor: '#ffffff' 
         }).then(canvasCaptura => {
-            // Descarga de la imagen limpia a la galería
+            // Restaurar el ancho original en pantalla
+            elementoContrato.style.width = anchoOriginal;
+
+            // Descarga de la imagen con proporción correcta de documento a la galería
             const enlace = document.createElement('a');
             enlace.download = `Contrato_${nombre.replace(/\s+/g, '_')}_${ci}.png`;
             enlace.href = canvasCaptura.toDataURL("image/png", 0.90);
@@ -471,8 +479,9 @@
 
             alert("¡Contrato descargado con éxito! Haga clic en 'IR A WHATSAPP' para adjuntar la imagen.");
         }).catch(err => {
+            elementoContrato.style.width = anchoOriginal;
             document.querySelector('.btn-send').style.display = 'block';
-            if (btnClearFirma) btnClearFirma.style.display = 'block';
+            if (btnClearFirma) clearFirmaBtn.style.display = 'block';
             console.error(err);
             alert("Error al procesar la imagen del contrato. Intente nuevamente.");
         });
