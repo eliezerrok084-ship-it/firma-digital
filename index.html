@@ -273,7 +273,7 @@
     const mora = urlParams.get('mora') || "50";
     const tiempoToken = urlParams.get('t');
 
-    // Función auxiliar para formatear números de forma estricta con separador de miles (punto) y decimales (coma)
+    // Función auxiliar para forzar siempre 2 decimales y separador de miles estricto (1.000,00)
     function formatearNumeroEstricto(valor, decimales = 2) {
         const num = parseFloat(valor);
         if (isNaN(num)) return valor;
@@ -328,14 +328,14 @@
         ctx.lineJoin = "round";
     }
 
-    // Inyectar datos reales al documento de manera dinámica con separadores de miles y decimales estrictos
+    // Inyectar datos reales al documento de manera dinámica forzando siempre los 2 decimales para montos monetarios
     document.getElementById('txt-nombre').innerText = nombre;
     document.getElementById('txt-ci').innerText = ci;
     document.getElementById('txt-dir').innerText = dir;
     document.getElementById('txt-moneda').innerText = moneda;
     document.getElementById('txt-moneda2').innerText = moneda;
     document.getElementById('txt-moneda3').innerText = moneda;
-    document.getElementById('txt-cap').innerText = formatearNumeroEstricto(capital, capital.includes('.') ? 2 : 0);
+    document.getElementById('txt-cap').innerText = formatearNumeroEstricto(capital, 2);
     document.getElementById('txt-lit').innerText = literal;
     document.getElementById('txt-int').innerText = interes;
     document.getElementById('txt-mod').innerText = modCuotas;
@@ -343,7 +343,7 @@
     document.getElementById('txt-fd').innerText = desembolso;
     document.getElementById('txt-met').innerText = metodo;
     document.getElementById('txt-f1').innerText = fecha1ra;
-    document.getElementById('txt-mora').innerText = formatearNumeroEstricto(mora, mora.includes('.') ? 2 : 0);
+    document.getElementById('txt-mora').innerText = formatearNumeroEstricto(mora, 2);
     document.getElementById('txt-firma-nombre').innerText = nombre;
     document.getElementById('txt-firma-ci').innerText = ci;
 
